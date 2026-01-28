@@ -10,15 +10,15 @@ public class NeoForgeServerConfig extends ServerConfig {
             .comment("""
                     Multiplier for natural health regeneration speed. For example, setting this to 0.1 makes it take 40 seconds
                     per half heart instead of 4 seconds. Setting this to 0 disables natural regeneration entirely.
-                    Note: with this feature, saturation does not speed up natural regeneration.
+                    Note: with this feature enabled, saturation does not speed up natural regeneration.
                      Vanilla: -1""")
             .defineInRange("naturalRegenSpeedMultiplier", 0.0, -1.0, 1.0);
 
     private static final ModConfigSpec.DoubleValue NATURAL_REGEN_MAX_HEAL_TO_PERCENTAGE = BUILDER
             .comment("""
-                Maximum health percentage (0.0–1.0) up to which natural regeneration can heal players.
-                For example, setting this to 0.5 means players will only be healed by natural regeneration up to 5 hearts.
-                """)
+                    Maximum health percentage (0.0–1.0) up to which natural regeneration can heal players.
+                    For example, setting this to 0.5 means players will only be healed by natural regeneration up to 5 hearts.
+                    """)
             .defineInRange("naturalRegenMaxHealToPercentage", 1.0, 0.0, 1.0);
 
     private static final ModConfigSpec.DoubleValue CAMPFIRE_HEAL_AMOUNT = BUILDER
@@ -28,26 +28,33 @@ public class NeoForgeServerConfig extends ServerConfig {
                     when fully saturated).
                     Set to 0 to disable Campfire regeneration entirely.
                     """)
-            .defineInRange("campfireHealAmount", 0.25, 0.0, 20.0);
+            .defineInRange("campfireHealAmount", 0.125, 0.0, 20.0);
 
-    private static final ModConfigSpec.DoubleValue CAMPFIRE_HEAL_EXHAUSTION = BUILDER
+    private static final ModConfigSpec.DoubleValue CAMPFIRE_EXHAUSTION = BUILDER
             .comment("""
-                Amount of exhaustion applied to players when they receive a heal from Campfire regeneration.
-                For reference, natural regeneration in vanilla applies 6.0 exhaustion per 1 (half heart) healed.
-                If this is above 0, players will only heal if they have foodLevel >= 18.
-                """)
-            .defineInRange("campfireHealExhaustion", 1.5, 0.0, 40.0);
+                    Amount of exhaustion applied to players when they receive a heal from Campfire regeneration.
+                    For reference, natural regeneration in vanilla applies 6.0 exhaustion per 1 (half heart) healed.
+                    If this is above 0, players will only heal if they have foodLevel >= 18.
+                    """)
+            .defineInRange("campfireExhaustion", 0.75, 0.0, 40.0);
 
     private static final ModConfigSpec.DoubleValue CAMPFIRE_INTERVAL_SECONDS = BUILDER
             .comment("Seconds between each heal tick when Campfire regeneration is active.")
-            .defineInRange("campfireHealIntervalSeconds", 1, 0.1, 10.0);
+            .defineInRange("campfireHealIntervalSeconds", 0.5, 0.1, 10.0);
 
     private static final ModConfigSpec.DoubleValue CAMPFIRE_MAX_HEAL_TO_PERCENTAGE = BUILDER
             .comment("""
-                Maximum health percentage (0.0–1.0) up to which Campfires can heal players.
-                For example, setting this to 0.8 means players will only be healed by Campfires up to 8 hearts.
-                """)
+                    Maximum health percentage (0.0–1.0) up to which Campfires can heal players.
+                    For example, setting this to 0.8 means players will only be healed by Campfires up to 8 hearts.
+                    """)
             .defineInRange("campfireMaxHealToPercentage", 1.0, 0.0, 1.0);
+
+    private static final ModConfigSpec.DoubleValue CAMPFIRE_SATURATED_HEAL_MULTIPLIER = BUILDER
+            .comment("""
+                    Multiplier for Campfire heal amount when the player is saturated.
+                    For reference, natural regeneration in vanilla heals 8 times faster when the player is fully saturated.
+                    Set to 1.0 to make Campfires heal at the same rate regardless of saturation.""")
+            .defineInRange("campfireSaturatedHealMultiplier", 8.0, 1.0, 16.0);
 
     private static final ModConfigSpec.DoubleValue CAMPFIRE_RANGE_CONFIG = BUILDER
             .comment("Range (in blocks) around the Campfire within which players must be present to activate the effect.")
@@ -79,8 +86,8 @@ public class NeoForgeServerConfig extends ServerConfig {
     }
 
     @Override
-    public float getCampfireHealExhaustion() {
-        return CAMPFIRE_HEAL_EXHAUSTION.get().floatValue();
+    public float getCampfireExhaustion() {
+        return CAMPFIRE_EXHAUSTION.get().floatValue();
     }
 
     @Override
@@ -91,6 +98,11 @@ public class NeoForgeServerConfig extends ServerConfig {
     @Override
     public float getCampfireMaxHealToPercentage() {
         return CAMPFIRE_MAX_HEAL_TO_PERCENTAGE.get().floatValue();
+    }
+
+    @Override
+    public float getCampfireSaturatedHealMultiplier() {
+        return CAMPFIRE_SATURATED_HEAL_MULTIPLIER.get().floatValue();
     }
 
     @Override

@@ -3,11 +3,11 @@
 Replaces natural regeneration with campfire healing.
 
 ## Features
-- Natural regeneration is disabled.
-- Campfires above sea level heals players within 3 blocks.
-- The healing costs food just like natural regeneration.
+- Natural regeneration is disabled (configurable).
+- Campfires above sea level heal players within 3 blocks.
+- Campfire healing costs food just like natural regeneration.
 
-The intent is to make the game harder and make campfires more useful. Early game, campfires allow you to heal whenever you want. When you start mining underground, health becomes a precious resource. You will have to return to base to heal, or rely on items like Suspicious Stew and Golden Apples to survive. Later, potions become the main source of healing.
+The intent is to make the game harder and make campfires more useful. Early game, campfires allow you to heal whenever you want. When you start mining underground, health becomes a precious resource. You will have to return to base to heal, or rely on items like Suspicious Stew and Golden Apples to survive. Later on, potions become the main source of healing.
 
 ## Configuration
 

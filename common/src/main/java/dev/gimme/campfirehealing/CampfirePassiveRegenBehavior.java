@@ -6,6 +6,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -46,31 +47,47 @@ public class CampfirePassiveRegenBehavior {
     }
 
     /**
-     * Triggers a campfire regeneration heal for the given player.
+     * Triggers a campfire heal for the given player.
      */
     private static void triggerHeal(ServerPlayer player) {
-        var healAmount = getHealAmountForPlayer(player);
-        if (healAmount == 0) return;
+        var healData = getAmountPlayerShouldHeal(player);
+        if (healData == null) return;
 
-        player.heal(healAmount);
-        player.causeFoodExhaustion(ServerConfig.INSTANCE.getCampfireHealExhaustion());
+        player.heal(healData.healAmount);
+        player.causeFoodExhaustion(healData.exhaustionAmount);
     }
 
     /**
-     * Returns the amount the given player will be healed by a campfire if triggered.
+     * Returns how much the given player should heal (and exhaust) from a campfire right now, or null if they cannot heal.
      */
-    private static float getHealAmountForPlayer(ServerPlayer player) {
-        if (player.getFoodData().getFoodLevel() < 18 && ServerConfig.INSTANCE.getCampfireHealExhaustion() > 0) return 0;
+    @Nullable
+    private static HealData getAmountPlayerShouldHeal(ServerPlayer player) {
+        if (!player.isHurt()) return null;
 
-        var maxHealTo = player.getMaxHealth() * ServerConfig.INSTANCE.getCampfireMaxHealToPercentage();
-        return Math.min(ServerConfig.INSTANCE.getCampfireHealAmount(), maxHealTo - player.getHealth());
+        var foodData = player.getFoodData();
+        float healAmount = ServerConfig.INSTANCE.getCampfireHealAmount();
+        float exhaustionAmount = ServerConfig.INSTANCE.getCampfireExhaustion();
+
+        if (foodData.getFoodLevel() < 18 && exhaustionAmount > 0) return null;
+        if (foodData.getFoodLevel() >= 20 && foodData.getSaturationLevel() > 0) {
+            healAmount *= ServerConfig.INSTANCE.getCampfireSaturatedHealMultiplier();
+            exhaustionAmount *= ServerConfig.INSTANCE.getCampfireSaturatedHealMultiplier();
+        }
+
+        float maxHealTo = player.getMaxHealth() * ServerConfig.INSTANCE.getCampfireMaxHealToPercentage();
+        var actualHealAmount = Math.min(healAmount, maxHealTo - player.getHealth());
+        if (actualHealAmount == 0) return null;
+
+        return new HealData(actualHealAmount, exhaustionAmount);
     }
+
+    private record HealData(float healAmount, float exhaustionAmount) {}
 
     /**
      * Indicate to the given player if they are currently regenerating from a campfire.
      */
     private static void indicateIfPlayerIsRegenerating(ServerPlayer player) {
-        if (getHealAmountForPlayer(player) == 0) return;
+        if (getAmountPlayerShouldHeal(player) == null) return;
         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 5, 0, true, true, true));
     }
 

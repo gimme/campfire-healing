@@ -8,9 +8,10 @@ public abstract class ServerConfig {
     public abstract float getNaturalRegenMaxHealToPercentage();
 
     public abstract float getCampfireHealAmount();
-    public abstract float getCampfireHealExhaustion();
+    public abstract float getCampfireExhaustion();
     public abstract float getCampfireSecondsBetweenHeals();
     public abstract float getCampfireMaxHealToPercentage();
+    public abstract float getCampfireSaturatedHealMultiplier();
     public abstract int getCampfireRequiredPlayers();
     public abstract float getCampfireRange();
     public abstract int getCampfireMinYLevel();
