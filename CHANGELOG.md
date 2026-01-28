@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.21.11-0.1.1] - 2026-01-28
+
 ### Added
 
 - Added optional sped up healing when saturated.
