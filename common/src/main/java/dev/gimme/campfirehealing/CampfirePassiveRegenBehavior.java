@@ -5,6 +5,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +25,16 @@ public class CampfirePassiveRegenBehavior {
      */
     public static void tickCampfireRegen(ServerLevel level, CampfireBlockEntity campfire) {
         if (ServerConfig.INSTANCE.getCampfireHealAmount() <= 0) return;
-        if (campfire.getBlockPos().getY() < ServerConfig.INSTANCE.getCampfireMinYLevel()) return;
+        int minYLevel;
+        if (level.dimensionType().skybox() == DimensionType.Skybox.OVERWORLD) {
+            minYLevel = ServerConfig.INSTANCE.getCampfireMinYLevelOverworld();
+        } else if (level.dimensionTypeRegistration().is(BuiltinDimensionTypes.NETHER)) {
+            minYLevel = ServerConfig.INSTANCE.getCampfireMinYLevelNether();
+        } else {
+            minYLevel = ServerConfig.INSTANCE.getCampfireMinYLevelOther();
+        }
+        if (campfire.getBlockPos().getY() < minYLevel) return;
+
 
         var tickTimer = campfireTickTimers.computeIfAbsent(campfire, k -> new TickTimer());
 

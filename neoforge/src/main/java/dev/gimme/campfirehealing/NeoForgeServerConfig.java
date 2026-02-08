@@ -64,9 +64,17 @@ public class NeoForgeServerConfig extends ServerConfig {
             .comment("Number of players required to be near the same Campfire to activate regeneration.")
             .defineInRange("campfireRequiredPlayers", 1, 1, 100);
 
-    private static final ModConfigSpec.IntValue CAMPFIRE_MIN_Y = BUILDER
-            .comment("The minimum Y level a Campfire must be placed at to provide regeneration.")
-            .defineInRange("campfireMinY", 63, -64, 2033);
+    private static final ModConfigSpec.IntValue CAMPFIRE_MIN_Y_OVERWORLD = BUILDER
+            .comment("The minimum Y level a Campfire must be placed at to provide regeneration in the Overworld.")
+            .defineInRange("campfireMinYOverworld", 63, -64, 2033);
+
+    private static final ModConfigSpec.IntValue CAMPFIRE_MIN_Y_NETHER = BUILDER
+            .comment("The minimum Y level a Campfire must be placed at to provide regeneration in the Nether.")
+            .defineInRange("campfireMinYNether", 1000, 0, 1000);
+
+    private static final ModConfigSpec.IntValue CAMPFIRE_MIN_Y_OTHER = BUILDER
+            .comment("The minimum Y level a Campfire must be placed at to provide regeneration in other dimensions (just the End in vanilla).")
+            .defineInRange("campfireMinYOther", 1000, -1000, 1000);
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 
@@ -116,7 +124,17 @@ public class NeoForgeServerConfig extends ServerConfig {
     }
 
     @Override
-    public int getCampfireMinYLevel() {
-        return CAMPFIRE_MIN_Y.get();
+    public int getCampfireMinYLevelOverworld() {
+        return CAMPFIRE_MIN_Y_OVERWORLD.get();
+    }
+
+    @Override
+    public int getCampfireMinYLevelNether() {
+        return CAMPFIRE_MIN_Y_NETHER.get();
+    }
+
+    @Override
+    public int getCampfireMinYLevelOther() {
+        return CAMPFIRE_MIN_Y_OTHER.get();
     }
 }

@@ -14,5 +14,7 @@ public abstract class ServerConfig {
     public abstract float getCampfireSaturatedHealMultiplier();
     public abstract int getCampfireRequiredPlayers();
     public abstract float getCampfireRange();
-    public abstract int getCampfireMinYLevel();
+    public abstract int getCampfireMinYLevelOverworld();
+    public abstract int getCampfireMinYLevelNether();
+    public abstract int getCampfireMinYLevelOther();
 }
