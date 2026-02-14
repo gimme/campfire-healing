@@ -24,17 +24,10 @@ public class CampfirePassiveRegenBehavior {
      * Ticks campfire regeneration logic.
      */
     public static void tickCampfireRegen(ServerLevel level, CampfireBlockEntity campfire) {
-        if (Main.INSTANCE.getServerConfig().getCampfireHealAmount() <= 0) return;
-        int minYLevel;
-        if (level.dimensionType().skybox() == DimensionType.Skybox.OVERWORLD) {
-            minYLevel = Main.INSTANCE.getServerConfig().getCampfireMinYLevelOverworld();
-        } else if (level.dimensionTypeRegistration().is(BuiltinDimensionTypes.NETHER)) {
-            minYLevel = Main.INSTANCE.getServerConfig().getCampfireMinYLevelNether();
-        } else {
-            minYLevel = Main.INSTANCE.getServerConfig().getCampfireMinYLevelOther();
-        }
-        if (campfire.getBlockPos().getY() < minYLevel) return;
-
+        if (Main.INSTANCE.getServerConfig().getCampfireHealAmount(campfire) <= 0) return;
+        var yLevel = campfire.getBlockPos().getY();
+        if (yLevel < Main.INSTANCE.getServerConfig().getCampfireMinYLevel(campfire)) return;
+        if (yLevel > Main.INSTANCE.getServerConfig().getCampfireMaxYLevel(campfire)) return;
 
         var tickTimer = campfireTickTimers.computeIfAbsent(campfire, k -> new TickTimer());
 
@@ -45,7 +38,7 @@ public class CampfirePassiveRegenBehavior {
         if (playersInRange.size() >= playerRequirement) {
             tickTimer.increment();
 
-            playersInRange.forEach(CampfirePassiveRegenBehavior::indicateIfPlayerIsRegenerating);
+            playersInRange.forEach(player -> indicateIfPlayerIsRegenerating(player, campfire));
         } else {
             tickTimer.decrement();
         }
@@ -53,15 +46,15 @@ public class CampfirePassiveRegenBehavior {
         if (tickTimer.hasReachedSeconds(Main.INSTANCE.getServerConfig().getCampfireSecondsBetweenHeals())) {
             tickTimer.reset();
 
-            playersInRange.forEach(CampfirePassiveRegenBehavior::triggerHeal);
+            playersInRange.forEach(player -> triggerHeal(player, campfire));
         }
     }
 
     /**
      * Triggers a campfire heal for the given player.
      */
-    private static void triggerHeal(ServerPlayer player) {
-        var healData = getAmountPlayerShouldHeal(player);
+    private static void triggerHeal(ServerPlayer player, CampfireBlockEntity campfire) {
+        var healData = getAmountPlayerShouldHeal(player, campfire);
         if (healData == null) return;
 
         player.heal(healData.healAmount);
@@ -72,12 +65,12 @@ public class CampfirePassiveRegenBehavior {
      * Returns how much the given player should heal (and exhaust) from a campfire right now, or null if they cannot heal.
      */
     @Nullable
-    private static HealData getAmountPlayerShouldHeal(ServerPlayer player) {
+    private static HealData getAmountPlayerShouldHeal(ServerPlayer player, CampfireBlockEntity campfire) {
         if (!player.isHurt()) return null;
 
         var foodData = player.getFoodData();
-        float healAmount = Main.INSTANCE.getServerConfig().getCampfireHealAmount();
-        float exhaustionAmount = Main.INSTANCE.getServerConfig().getCampfireExhaustion();
+        float healAmount = Main.INSTANCE.getServerConfig().getCampfireHealAmount(campfire);
+        float exhaustionAmount = Main.INSTANCE.getServerConfig().getCampfireExhaustion(campfire);
 
         if (foodData.getFoodLevel() < 18 && exhaustionAmount > 0) return null;
         if (foodData.getFoodLevel() >= 20 && foodData.getSaturationLevel() > 0) {
@@ -85,7 +78,7 @@ public class CampfirePassiveRegenBehavior {
             exhaustionAmount *= Main.INSTANCE.getServerConfig().getCampfireSaturatedHealMultiplier();
         }
 
-        float maxHealTo = player.getMaxHealth() * Main.INSTANCE.getServerConfig().getCampfireMaxHealToPercentage();
+        float maxHealTo = player.getMaxHealth() * Main.INSTANCE.getServerConfig().getCampfireMaxHealToPercentage(campfire);
         var actualHealAmount = Math.min(healAmount, maxHealTo - player.getHealth());
         if (actualHealAmount == 0) return null;
 
@@ -97,8 +90,8 @@ public class CampfirePassiveRegenBehavior {
     /**
      * Indicate to the given player if they are currently regenerating from a campfire.
      */
-    private static void indicateIfPlayerIsRegenerating(ServerPlayer player) {
-        if (getAmountPlayerShouldHeal(player) == null) return;
+    private static void indicateIfPlayerIsRegenerating(ServerPlayer player, CampfireBlockEntity campfire) {
+        if (getAmountPlayerShouldHeal(player, campfire) == null) return;
         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 5, 0, true, true, true));
     }
 

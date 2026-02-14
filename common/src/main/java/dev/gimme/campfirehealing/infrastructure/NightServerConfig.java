@@ -4,7 +4,7 @@ import dev.gimme.campfirehealing.ServerConfig;
 import dev.gimme.config.ModConfigSpec;
 import dev.gimme.config.ModConfigSpec.ConfigValue;
 
-public class NightServerConfig implements ServerConfig {
+public class NightServerConfig extends ServerConfig {
 
     public static final ModConfigSpec SPEC = new ModConfigSpec();
 
@@ -28,18 +28,18 @@ public class NightServerConfig implements ServerConfig {
             For reference, natural regeneration in vanilla heals 1 (half heart) every 4 seconds (or every 0.5 seconds
             when fully saturated).
             Set to 0 to disable Campfire regeneration entirely.""")
-        .define("campfireHealAmount", 0.125);
+        .define("campfireHealAmount", 0.025);
 
     private static final ConfigValue<Number> CAMPFIRE_EXHAUSTION = SPEC.variable()
         .comment("""
             Amount of exhaustion applied to players when they receive a heal from Campfire regeneration.
             For reference, natural regeneration in vanilla applies 6.0 exhaustion per 1 (half heart) healed.
             If this is above 0, players will only heal if they have foodLevel >= 18.""")
-        .define("campfireExhaustion", 0.75);
+        .define("campfireExhaustion", 0.15);
 
     private static final ConfigValue<Number> CAMPFIRE_INTERVAL_SECONDS = SPEC.variable()
         .comment("Seconds between each heal tick when Campfire regeneration is active.")
-        .define("campfireHealIntervalSeconds", 0.5);
+        .define("campfireHealIntervalSeconds", 0.1);
 
     private static final ConfigValue<Number> CAMPFIRE_MAX_HEAL_TO_PERCENTAGE = SPEC.variable()
         .comment("""
@@ -75,6 +75,41 @@ public class NightServerConfig implements ServerConfig {
     private static final ConfigValue<Number> CAMPFIRE_MIN_Y_OTHER = SPEC.variable()
         .comment("The minimum Y-level a Campfire must be placed at to provide regeneration in other dimensions (just affects the End in vanilla).")
         .define("campfireMinYOther", 1000);
+
+    private static final ConfigValue<Double> SOULFIRE_HEAL_MULTIPLIER = SPEC.variable()
+        .comment("""
+            Multiplier for the amount of health restored by Soul Campfire compared to Campfire.
+            For example, setting this to 0.5 makes Soul Campfire heal half as much per tick.""")
+        .define("soulfireHealMultiplier", 1.0);
+
+    private static final ConfigValue<Double> SOULFIRE_EXHAUSTION_MULTIPLIER = SPEC.variable()
+        .comment("""
+            Multiplier for the amount of exhaustion applied by Soul Campfire compared to Campfire.
+            For example, setting this to 2.0 makes Soul Campfire apply double the exhaustion per tick.""")
+        .define("soulfireExhaustionMultiplier", 4.0);
+
+    private static final ConfigValue<Double> SOULFIRE_MAX_HEAL_TO_PERCENTAGE = SPEC.variable()
+        .comment("""
+            Maximum health percentage (0.0–1.0) up to which Soul Campfires can heal players.""")
+        .define("soulfireMaxHealToPercentage", 1.0);
+
+    private static final ConfigValue<Number> SOULFIRE_MIN_Y_OVERWORLD = SPEC.variable()
+        .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in the Overworld.")
+        .define("soulfireMinYOverworld", -1000);
+
+    private static final ConfigValue<Number> SOULFIRE_MIN_Y_NETHER = SPEC.variable()
+        .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in the Nether.")
+        .define("soulfireMinYNether", -1000);
+
+    private static final ConfigValue<Number> SOULFIRE_MIN_Y_OTHER = SPEC.variable()
+        .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in other dimensions (just affects the End in vanilla).")
+        .define("soulfireMinYOther", -1000);
+
+    private static final ConfigValue<Number> SOULFIRE_MAX_Y_NETHER = SPEC.variable()
+        .comment("""
+            The maximum Y-level a Soul Campfire must be placed at to provide regeneration in the Nether.
+            For example, setting this to 31 means that it has to be placed below the lava level.""")
+        .define("soulfireMaxYNether", 1000);
 
     @Override
     public float getNaturalRegenSpeedMultiplier() {
@@ -134,5 +169,40 @@ public class NightServerConfig implements ServerConfig {
     @Override
     public int getCampfireMinYLevelOther() {
         return CAMPFIRE_MIN_Y_OTHER.get().intValue();
+    }
+
+    @Override
+    public float getSoulfireHealMultiplier() {
+        return SOULFIRE_HEAL_MULTIPLIER.get().floatValue();
+    }
+
+    @Override
+    public float getSoulfireExhaustionMultiplier() {
+        return SOULFIRE_EXHAUSTION_MULTIPLIER.get().floatValue();
+    }
+
+    @Override
+    public float getSoulfireMaxHealToPercentage() {
+        return SOULFIRE_MAX_HEAL_TO_PERCENTAGE.get().floatValue();
+    }
+
+    @Override
+    public int getSoulfireMinYLevelOverworld() {
+        return SOULFIRE_MIN_Y_OVERWORLD.get().intValue();
+    }
+
+    @Override
+    public int getSoulfireMinYLevelNether() {
+        return SOULFIRE_MIN_Y_NETHER.get().intValue();
+    }
+
+    @Override
+    public int getSoulfireMinYLevelOther() {
+        return SOULFIRE_MIN_Y_OTHER.get().intValue();
+    }
+
+    @Override
+    public int getSoulfireMaxYLevelNether() {
+        return SOULFIRE_MAX_Y_NETHER.get().intValue();
     }
 }
