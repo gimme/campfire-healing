@@ -24,23 +24,23 @@ public class CampfirePassiveRegenBehavior {
      * Ticks campfire regeneration logic.
      */
     public static void tickCampfireRegen(ServerLevel level, CampfireBlockEntity campfire) {
-        if (ServerConfig.INSTANCE.getCampfireHealAmount() <= 0) return;
+        if (Main.INSTANCE.getServerConfig().getCampfireHealAmount() <= 0) return;
         int minYLevel;
         if (level.dimensionType().skybox() == DimensionType.Skybox.OVERWORLD) {
-            minYLevel = ServerConfig.INSTANCE.getCampfireMinYLevelOverworld();
+            minYLevel = Main.INSTANCE.getServerConfig().getCampfireMinYLevelOverworld();
         } else if (level.dimensionTypeRegistration().is(BuiltinDimensionTypes.NETHER)) {
-            minYLevel = ServerConfig.INSTANCE.getCampfireMinYLevelNether();
+            minYLevel = Main.INSTANCE.getServerConfig().getCampfireMinYLevelNether();
         } else {
-            minYLevel = ServerConfig.INSTANCE.getCampfireMinYLevelOther();
+            minYLevel = Main.INSTANCE.getServerConfig().getCampfireMinYLevelOther();
         }
         if (campfire.getBlockPos().getY() < minYLevel) return;
 
 
         var tickTimer = campfireTickTimers.computeIfAbsent(campfire, k -> new TickTimer());
 
-        var healRange = new AABB(campfire.getBlockPos()).inflate(ServerConfig.INSTANCE.getCampfireRange());
+        var healRange = new AABB(campfire.getBlockPos()).inflate(Main.INSTANCE.getServerConfig().getCampfireRange());
         var playersInRange = level.getEntitiesOfClass(ServerPlayer.class, healRange);
-        var playerRequirement = ServerConfig.INSTANCE.getCampfireRequiredPlayers();
+        var playerRequirement = Main.INSTANCE.getServerConfig().getCampfireRequiredPlayers();
 
         if (playersInRange.size() >= playerRequirement) {
             tickTimer.increment();
@@ -50,7 +50,7 @@ public class CampfirePassiveRegenBehavior {
             tickTimer.decrement();
         }
 
-        if (tickTimer.hasReachedSeconds(ServerConfig.INSTANCE.getCampfireSecondsBetweenHeals())) {
+        if (tickTimer.hasReachedSeconds(Main.INSTANCE.getServerConfig().getCampfireSecondsBetweenHeals())) {
             tickTimer.reset();
 
             playersInRange.forEach(CampfirePassiveRegenBehavior::triggerHeal);
@@ -76,16 +76,16 @@ public class CampfirePassiveRegenBehavior {
         if (!player.isHurt()) return null;
 
         var foodData = player.getFoodData();
-        float healAmount = ServerConfig.INSTANCE.getCampfireHealAmount();
-        float exhaustionAmount = ServerConfig.INSTANCE.getCampfireExhaustion();
+        float healAmount = Main.INSTANCE.getServerConfig().getCampfireHealAmount();
+        float exhaustionAmount = Main.INSTANCE.getServerConfig().getCampfireExhaustion();
 
         if (foodData.getFoodLevel() < 18 && exhaustionAmount > 0) return null;
         if (foodData.getFoodLevel() >= 20 && foodData.getSaturationLevel() > 0) {
-            healAmount *= ServerConfig.INSTANCE.getCampfireSaturatedHealMultiplier();
-            exhaustionAmount *= ServerConfig.INSTANCE.getCampfireSaturatedHealMultiplier();
+            healAmount *= Main.INSTANCE.getServerConfig().getCampfireSaturatedHealMultiplier();
+            exhaustionAmount *= Main.INSTANCE.getServerConfig().getCampfireSaturatedHealMultiplier();
         }
 
-        float maxHealTo = player.getMaxHealth() * ServerConfig.INSTANCE.getCampfireMaxHealToPercentage();
+        float maxHealTo = player.getMaxHealth() * Main.INSTANCE.getServerConfig().getCampfireMaxHealToPercentage();
         var actualHealAmount = Math.min(healAmount, maxHealTo - player.getHealth());
         if (actualHealAmount == 0) return null;
 

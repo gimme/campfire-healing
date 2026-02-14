@@ -1,20 +1,18 @@
 package dev.gimme.campfirehealing;
 
-public abstract class ServerConfig {
+public interface ServerConfig {
 
-    public static ServerConfig INSTANCE;
+    float getNaturalRegenSpeedMultiplier();
+    float getNaturalRegenMaxHealToPercentage();
 
-    public abstract float getNaturalRegenSpeedMultiplier();
-    public abstract float getNaturalRegenMaxHealToPercentage();
-
-    public abstract float getCampfireHealAmount();
-    public abstract float getCampfireExhaustion();
-    public abstract float getCampfireSecondsBetweenHeals();
-    public abstract float getCampfireMaxHealToPercentage();
-    public abstract float getCampfireSaturatedHealMultiplier();
-    public abstract int getCampfireRequiredPlayers();
-    public abstract float getCampfireRange();
-    public abstract int getCampfireMinYLevelOverworld();
-    public abstract int getCampfireMinYLevelNether();
-    public abstract int getCampfireMinYLevelOther();
+    float getCampfireHealAmount();
+    float getCampfireExhaustion();
+    float getCampfireSecondsBetweenHeals();
+    float getCampfireMaxHealToPercentage();
+    float getCampfireSaturatedHealMultiplier();
+    int getCampfireRequiredPlayers();
+    float getCampfireRange();
+    int getCampfireMinYLevelOverworld();
+    int getCampfireMinYLevelNether();
+    int getCampfireMinYLevelOther();
 }
