@@ -1,8 +1,14 @@
 package dev.gimme.campfirehealing.infrastructure;
 
+import dev.gimme.campfirehealing.Constants;
 import dev.gimme.campfirehealing.ServerConfig;
 import dev.gimme.config.ModConfigSpec;
 import dev.gimme.config.ModConfigSpec.ConfigValue;
+import net.minecraft.resources.Identifier;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public class NightServerConfig extends ServerConfig {
 
@@ -28,18 +34,29 @@ public class NightServerConfig extends ServerConfig {
             For reference, natural regeneration in vanilla heals 1 (half heart) every 4 seconds (or every 0.5 seconds
             when fully saturated).
             Set to 0 to disable Campfire regeneration entirely.""")
-        .define("campfireHealAmount", 0.025);
+        .define("campfireHealAmount", 0.125);
 
     private static final ConfigValue<Number> CAMPFIRE_EXHAUSTION = SPEC.variable()
         .comment("""
             Amount of exhaustion applied to players when they receive a heal from Campfire regeneration.
             For reference, natural regeneration in vanilla applies 6.0 exhaustion per 1 (half heart) healed.
             If this is above 0, players will only heal if they have foodLevel >= 18.""")
-        .define("campfireExhaustion", 0.15);
+        .define("campfireExhaustion", 0.75);
 
     private static final ConfigValue<Number> CAMPFIRE_INTERVAL_SECONDS = SPEC.variable()
         .comment("Seconds between each heal tick when Campfire regeneration is active.")
-        .define("campfireHealIntervalSeconds", 0.1);
+        .define("campfireHealIntervalSeconds", 0.5);
+
+    private static final ConfigValue<Number> CAMPFIRE_SATURATION_HEAL_MULTIPLIER = SPEC.variable()
+        .comment("""
+            Multiplier for Campfire heal amount when the player is saturated.
+            For reference, natural regeneration in vanilla heals 8 times faster when the player is fully saturated.
+            Set to 1.0 to make Campfires heal at the same rate regardless of saturation.""")
+        .define("campfireSaturationHealMultiplier", 8.0);
+
+    private static final ConfigValue<Number> CAMPFIRE_RANGE_CONFIG = SPEC.variable()
+        .comment("Range (in blocks) around the Campfire within which players must be present to activate the effect.")
+        .define("campfireRange", 3.0);
 
     private static final ConfigValue<Number> CAMPFIRE_MAX_HEAL_TO_PERCENTAGE = SPEC.variable()
         .comment("""
@@ -47,16 +64,12 @@ public class NightServerConfig extends ServerConfig {
             For example, setting this to 0.8 means players will only be healed by Campfires up to 8 hearts.""")
         .define("campfireMaxHealToPercentage", 1.0);
 
-    private static final ConfigValue<Number> CAMPFIRE_SATURATED_HEAL_MULTIPLIER = SPEC.variable()
+    private static final ConfigValue<Number> CAMPFIRE_REQUIRED_FOOD_LEVEL = SPEC.variable()
         .comment("""
-            Multiplier for Campfire heal amount when the player is saturated.
-            For reference, natural regeneration in vanilla heals 8 times faster when the player is fully saturated.
-            Set to 1.0 to make Campfires heal at the same rate regardless of saturation.""")
-        .define("campfireSaturatedHealMultiplier", 8.0);
-
-    private static final ConfigValue<Number> CAMPFIRE_RANGE_CONFIG = SPEC.variable()
-        .comment("Range (in blocks) around the Campfire within which players must be present to activate the effect.")
-        .define("campfireRange", 3.0);
+            Minimum food level players must have to be healed by Campfire regeneration.
+            Natural regeneration in vanilla requires 18.
+            Setting this to 1 allows it to starve you out completely.""")
+        .define("campfireRequiredFoodLevel", 18);
 
     private static final ConfigValue<Number> CAMPFIRE_REQUIRED_PLAYERS = SPEC.variable()
         .comment("Number of players required to be near the same Campfire to activate regeneration.")
@@ -76,22 +89,47 @@ public class NightServerConfig extends ServerConfig {
         .comment("The minimum Y-level a Campfire must be placed at to provide regeneration in other dimensions (just affects the End in vanilla).")
         .define("campfireMinYOther", 1000);
 
-    private static final ConfigValue<Double> SOULFIRE_HEAL_MULTIPLIER = SPEC.variable()
+    private static final ConfigValue<Number> SOULFIRE_HEAL_MULTIPLIER = SPEC.variable()
         .comment("""
             Multiplier for the amount of health restored by Soul Campfire compared to Campfire.
             For example, setting this to 0.5 makes Soul Campfire heal half as much per tick.""")
-        .define("soulfireHealMultiplier", 1.0);
+        .define("soulfireHealMultiplier", 0.5);
 
-    private static final ConfigValue<Double> SOULFIRE_EXHAUSTION_MULTIPLIER = SPEC.variable()
+    private static final ConfigValue<Number> SOULFIRE_EXHAUSTION_MULTIPLIER = SPEC.variable()
         .comment("""
             Multiplier for the amount of exhaustion applied by Soul Campfire compared to Campfire.
             For example, setting this to 2.0 makes Soul Campfire apply double the exhaustion per tick.""")
-        .define("soulfireExhaustionMultiplier", 4.0);
+        .define("soulfireExhaustionMultiplier", 2.0);
 
-    private static final ConfigValue<Double> SOULFIRE_MAX_HEAL_TO_PERCENTAGE = SPEC.variable()
+    private static final ConfigValue<Number> SOULFIRE_MAX_HEAL_TO_PERCENTAGE = SPEC.variable()
         .comment("""
             Maximum health percentage (0.0–1.0) up to which Soul Campfires can heal players.""")
         .define("soulfireMaxHealToPercentage", 1.0);
+
+    private static final ConfigValue<Number> SOULFIRE_REQUIRED_FOOD_LEVEL = SPEC.variable()
+        .comment("""
+            Minimum food level players must have to be healed by Soul Campfire regeneration.""")
+        .define("soulfireRequiredFoodLevel", 1);
+
+    private static final ConfigValue<List<String>> SOULFIRE_FUEL = SPEC.variable()
+        .comment("""
+                    List of items that can be used as fuel for Soul Campfires, along with how many seconds of fuel they provide.
+                    Format: "itemRegex,durationSeconds"
+                    Example: ["rotten_flesh,60", "bone,10"]""")
+        .define("soulfireFuel", List.of("rotten_flesh,60"));
+
+    private static final ConfigValue<Boolean> SOULFIRE_LIT_BY_FUEL = SPEC.variable()
+        .comment("""
+            If true, Soul Campfires will only be lit when you put fuel in them.
+            This is for visual purposes, but a consequence is that it's harder to cook normal food on them.""")
+        .define("soulfireLitByFuel", true);
+
+    private static final ConfigValue<List<String>> SOULFIRE_HEALING_EFFECTS = SPEC.variable()
+        .comment("""
+                    List of effects players get when they heal from a Soul Campfire.
+                    Format: "effectId,durationSeconds[0],amplifier[1]"
+                    Example: ["hunger", "nausea,4", "weakness,5,2"]""")
+        .define("soulfireHealingEffects", List.of("hunger", "darkness,1", "slowness", "weakness,5,2", "infested,300"));
 
     private static final ConfigValue<Number> SOULFIRE_MIN_Y_OVERWORLD = SPEC.variable()
         .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in the Overworld.")
@@ -137,18 +175,23 @@ public class NightServerConfig extends ServerConfig {
     }
 
     @Override
-    public float getCampfireMaxHealToPercentage() {
-        return CAMPFIRE_MAX_HEAL_TO_PERCENTAGE.get().floatValue();
-    }
-
-    @Override
-    public float getCampfireSaturatedHealMultiplier() {
-        return CAMPFIRE_SATURATED_HEAL_MULTIPLIER.get().floatValue();
+    public float getCampfireSaturationHealMultiplier() {
+        return CAMPFIRE_SATURATION_HEAL_MULTIPLIER.get().floatValue();
     }
 
     @Override
     public float getCampfireRange() {
         return CAMPFIRE_RANGE_CONFIG.get().floatValue();
+    }
+
+    @Override
+    public float getCampfireMaxHealToPercentage() {
+        return CAMPFIRE_MAX_HEAL_TO_PERCENTAGE.get().floatValue();
+    }
+
+    @Override
+    public int getCampfireRequiredFoodLevel() {
+        return CAMPFIRE_REQUIRED_FOOD_LEVEL.get().intValue();
     }
 
     @Override
@@ -184,6 +227,82 @@ public class NightServerConfig extends ServerConfig {
     @Override
     public float getSoulfireMaxHealToPercentage() {
         return SOULFIRE_MAX_HEAL_TO_PERCENTAGE.get().floatValue();
+    }
+
+    @Override
+    public int getSoulfireRequiredFoodLevel() {
+        return SOULFIRE_REQUIRED_FOOD_LEVEL.get().intValue();
+    }
+
+    @Override
+    public Set<SoulfireFuel> getSoulfireFuel() {
+        return SOULFIRE_FUEL.get().stream()
+            .map(fuelString -> {
+                String[] parts = fuelString.split(",");
+
+                String itemRegex = parts[0].trim();
+                if (itemRegex.isEmpty()) {
+                    Constants.LOG.warn("Invalid itemRegex for soulfireFuel: \"{}\"", fuelString);
+                    return null;
+                }
+
+                double durationSeconds = -1;
+                if (parts.length > 1) {
+                    try {
+                        durationSeconds = Double.parseDouble(parts[1].trim());
+                    } catch (Exception ignored) {
+                    }
+                }
+                if (durationSeconds <= 0) {
+                    Constants.LOG.warn("Invalid durationSeconds for soulfireFuel: \"{}\"", fuelString);
+                    return null;
+                }
+
+                return new SoulfireFuel(itemRegex, (int) (durationSeconds * 20));
+            })
+            .filter(Objects::nonNull)
+            .collect(java.util.stream.Collectors.toSet());
+    }
+
+    @Override
+    public boolean isSoulfireLitByFuel() {
+        return SOULFIRE_LIT_BY_FUEL.get();
+    }
+
+    @Override
+    public Set<Effect> getSoulfireHealingEffects() {
+        return SOULFIRE_HEALING_EFFECTS.get().stream()
+            .map(effectString -> {
+                String[] parts = effectString.split(",");
+
+                Identifier effectId = Identifier.tryParse(parts[0].trim());
+                if (effectId == null) {
+                    Constants.LOG.warn("Invalid effectId for soulfireHealingEffects: \"{}\"", effectString);
+                    return null;
+                }
+
+                double durationSeconds = 0;
+                if (parts.length > 1) {
+                    try {
+                        durationSeconds = Double.parseDouble(parts[1].trim());
+                    } catch (Exception e) {
+                        Constants.LOG.warn("Invalid durationSeconds for soulfireHealingEffects: \"{}\"", effectString);
+                    }
+                }
+
+                int amplifier = 0;
+                if (parts.length > 2) {
+                    try {
+                        amplifier = Integer.parseInt(parts[2].trim()) - 1; // Convert from 1-based input to the 0-based code
+                    } catch (NumberFormatException e) {
+                        Constants.LOG.warn("Invalid amplifier for soulfireHealingEffects: \"{}\"", effectString);
+                    }
+                }
+
+                return new Effect(effectId, 5 + (int) (durationSeconds * 20), amplifier);
+            })
+            .filter(Objects::nonNull)
+            .collect(java.util.stream.Collectors.toSet());
     }
 
     @Override

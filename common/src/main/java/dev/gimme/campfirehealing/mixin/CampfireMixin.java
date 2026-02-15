@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Modifies campfire behavior.
+ * Modifies Campfire behavior.
  */
 @Mixin(CampfireBlockEntity.class)
 public class CampfireMixin {

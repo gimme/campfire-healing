@@ -28,7 +28,7 @@ public class FoodHealingMixin {
     private void beforeBigHeal(ServerPlayer player, CallbackInfo ci) {
         if (isModFeatureDisabled()) return;
 
-        float healRatio = Math.min(((FoodData) (Object) this).getSaturationLevel(), 6.0F) / 6.0F;
+        float healRatio = Math.min(((FoodData) (Object) this).getSaturationLevel(), 6.0f) / 6.0f;
 
         if (isRegenStopped(player) || this.tickTimer < (int) (healRatio * getRegenTicks())) {
             ci.cancel();

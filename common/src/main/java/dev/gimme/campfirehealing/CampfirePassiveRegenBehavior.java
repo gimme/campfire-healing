@@ -1,12 +1,12 @@
 package dev.gimme.campfirehealing;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,26 +61,48 @@ public class CampfirePassiveRegenBehavior {
         player.causeFoodExhaustion(healData.exhaustionAmount);
     }
 
+    private static void applySoulfireHealingEffects(ServerPlayer player) {
+        var mobEffectRegistry = player.registryAccess().lookupOrThrow(Registries.MOB_EFFECT);
+        Main.INSTANCE.getServerConfig().getSoulfireHealingEffects().forEach(effect -> {
+            var mobEffect = mobEffectRegistry.get(effect.effectId());
+            if (mobEffect.isEmpty()) {
+                Constants.LOG.warn("Effect with ID {} not found, skipping", effect.effectId());
+                return;
+            }
+            if (effect.duration() <= 0) return;
+            player.addEffect(new MobEffectInstance(mobEffect.get(), effect.duration(), effect.amplifier(), true, true));
+        });
+    }
+
     /**
      * Returns how much the given player should heal (and exhaust) from a campfire right now, or null if they cannot heal.
      */
     @Nullable
     private static HealData getAmountPlayerShouldHeal(ServerPlayer player, CampfireBlockEntity campfire) {
         if (!player.isHurt()) return null;
+        if (player.isCreative() || player.isSpectator()) return null;
+        if (campfire.getBlockState().is(Blocks.SOUL_CAMPFIRE) && !SoulfireBehavior.isSoulFueled(campfire)) return null;
 
         var foodData = player.getFoodData();
         float healAmount = Main.INSTANCE.getServerConfig().getCampfireHealAmount(campfire);
         float exhaustionAmount = Main.INSTANCE.getServerConfig().getCampfireExhaustion(campfire);
 
-        if (foodData.getFoodLevel() < 18 && exhaustionAmount > 0) return null;
-        if (foodData.getFoodLevel() >= 20 && foodData.getSaturationLevel() > 0) {
-            healAmount *= Main.INSTANCE.getServerConfig().getCampfireSaturatedHealMultiplier();
-            exhaustionAmount *= Main.INSTANCE.getServerConfig().getCampfireSaturatedHealMultiplier();
+        var foodLevelRequirement = campfire.getBlockState().is(Blocks.SOUL_CAMPFIRE)
+            ? Main.INSTANCE.getServerConfig().getSoulfireRequiredFoodLevel()
+            : Main.INSTANCE.getServerConfig().getCampfireRequiredFoodLevel();
+        int foodLevelRequirement1 = Math.max(foodLevelRequirement, 1);
+        int foodLevelRequirement2 = Math.min(foodLevelRequirement + 2, 20);
+
+        if (foodData.getFoodLevel() < foodLevelRequirement1 && exhaustionAmount > 0) return null;
+        if (foodData.getFoodLevel() >= foodLevelRequirement2 && foodData.getSaturationLevel() > 0) {
+            float saturationMultiplier = Main.INSTANCE.getServerConfig().getCampfireSaturationHealMultiplier();
+            healAmount *= saturationMultiplier;
+            exhaustionAmount *= saturationMultiplier;
         }
 
         float maxHealTo = player.getMaxHealth() * Main.INSTANCE.getServerConfig().getCampfireMaxHealToPercentage(campfire);
         var actualHealAmount = Math.min(healAmount, maxHealTo - player.getHealth());
-        if (actualHealAmount == 0) return null;
+        if (actualHealAmount <= 0) return null;
 
         return new HealData(actualHealAmount, exhaustionAmount);
     }
@@ -93,6 +115,10 @@ public class CampfirePassiveRegenBehavior {
     private static void indicateIfPlayerIsRegenerating(ServerPlayer player, CampfireBlockEntity campfire) {
         if (getAmountPlayerShouldHeal(player, campfire) == null) return;
         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 5, 0, true, true, true));
+
+        if (campfire.getBlockState().is(Blocks.SOUL_CAMPFIRE)) {
+            applySoulfireHealingEffects(player);
+        }
     }
 
     /**

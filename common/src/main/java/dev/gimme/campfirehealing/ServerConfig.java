@@ -1,9 +1,12 @@
 package dev.gimme.campfirehealing;
 
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
+
+import java.util.Set;
 
 public abstract class ServerConfig {
 
@@ -13,10 +16,11 @@ public abstract class ServerConfig {
     protected abstract float getCampfireHealAmount();
     protected abstract float getCampfireExhaustion();
     public abstract float getCampfireSecondsBetweenHeals();
-    protected abstract float getCampfireMaxHealToPercentage();
-    public abstract float getCampfireSaturatedHealMultiplier();
-    public abstract int getCampfireRequiredPlayers();
+    public abstract float getCampfireSaturationHealMultiplier();
     public abstract float getCampfireRange();
+    protected abstract float getCampfireMaxHealToPercentage();
+    public abstract int getCampfireRequiredFoodLevel();
+    public abstract int getCampfireRequiredPlayers();
     protected abstract int getCampfireMinYLevelOverworld();
     protected abstract int getCampfireMinYLevelNether();
     protected abstract int getCampfireMinYLevelOther();
@@ -24,6 +28,10 @@ public abstract class ServerConfig {
     protected abstract float getSoulfireHealMultiplier();
     protected abstract float getSoulfireExhaustionMultiplier();
     protected abstract float getSoulfireMaxHealToPercentage();
+    public abstract int getSoulfireRequiredFoodLevel();
+    public abstract Set<SoulfireFuel> getSoulfireFuel();
+    public abstract boolean isSoulfireLitByFuel();
+    protected abstract Set<Effect> getSoulfireHealingEffects();
     protected abstract int getSoulfireMinYLevelOverworld();
     protected abstract int getSoulfireMinYLevelNether();
     protected abstract int getSoulfireMinYLevelOther();
@@ -85,4 +93,15 @@ public abstract class ServerConfig {
         }
         return Integer.MAX_VALUE;
     }
+
+    public record Effect(
+        Identifier effectId,
+        int duration,
+        int amplifier
+    ) {}
+
+    public record SoulfireFuel(
+        String itemRegex,
+        int duration
+    ) {}
 }
