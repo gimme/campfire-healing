@@ -6,8 +6,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -164,5 +167,58 @@ public class SoulfireBehavior {
     private static boolean matchesRegex(Identifier identifier, String regex) {
         if (identifier == null) return false;
         return identifier.toString().matches(regex) || identifier.getPath().matches(regex);
+    }
+
+    public static void onPlayerIsRegenerating(ServerPlayer player, CampfireBlockEntity campfire, boolean isFirstTick) {
+        boolean wasPlayerInfested = player.hasEffect(MobEffects.INFESTED);
+        applySoulfireHealingEffects(player);
+        boolean isPlayerInfested = player.hasEffect(MobEffects.INFESTED);
+
+        if (!wasPlayerInfested && isPlayerInfested) {
+            playInfestedSound(player);
+        }
+        if (isFirstTick) {
+            playEerieSound(campfire);
+        }
+    }
+
+    private static void applySoulfireHealingEffects(ServerPlayer player) {
+        var mobEffectRegistry = player.registryAccess().lookupOrThrow(Registries.MOB_EFFECT);
+        for (ServerConfig.Effect effect : getServerConfig().getSoulfireHealingEffects()) {
+            var mobEffect = mobEffectRegistry.get(effect.effectId());
+            if (mobEffect.isEmpty()) {
+                Constants.LOG.warn("Effect with ID {} not found, skipping", effect.effectId());
+                continue;
+            }
+            player.addEffect(new MobEffectInstance(mobEffect.get(), effect.duration(), effect.amplifier(), true, true));
+        }
+    }
+
+    private static void playInfestedSound(ServerPlayer player) {
+        player.level().playSound(
+            null, player.getX(), player.getY(), player.getZ(),
+            SoundEvents.SPIDER_STEP,
+            SoundSource.NEUTRAL,
+            1.0f,
+            2f
+        );
+    }
+
+    private static void playEerieSound(CampfireBlockEntity campfire) {
+        var level = campfire.getLevel();
+        if (level == null) return;
+
+        var pos = campfire.getBlockPos();
+        double x = pos.getX() + 0.5;
+        double y = pos.getY() + 0.75;
+        double z = pos.getZ() + 0.5;
+
+        level.playSound(
+            null, x, y, z,
+            SoundEvents.AMBIENT_SOUL_SAND_VALLEY_MOOD,
+            SoundSource.AMBIENT,
+            0.5f,
+            2f
+        );
     }
 }

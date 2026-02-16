@@ -38,7 +38,7 @@ public class CampfirePassiveRegenBehavior {
         if (playersInRange.size() >= playerRequirement) {
             tickTimer.increment();
 
-            playersInRange.forEach(player -> indicateIfPlayerIsRegenerating(player, campfire));
+            playersInRange.forEach(player -> applyRegenerationEffects(player, campfire));
         } else {
             tickTimer.decrement();
         }
@@ -59,19 +59,6 @@ public class CampfirePassiveRegenBehavior {
 
         player.heal(healData.healAmount);
         player.causeFoodExhaustion(healData.exhaustionAmount);
-    }
-
-    private static void applySoulfireHealingEffects(ServerPlayer player) {
-        var mobEffectRegistry = player.registryAccess().lookupOrThrow(Registries.MOB_EFFECT);
-        Main.INSTANCE.getServerConfig().getSoulfireHealingEffects().forEach(effect -> {
-            var mobEffect = mobEffectRegistry.get(effect.effectId());
-            if (mobEffect.isEmpty()) {
-                Constants.LOG.warn("Effect with ID {} not found, skipping", effect.effectId());
-                return;
-            }
-            if (effect.duration() <= 0) return;
-            player.addEffect(new MobEffectInstance(mobEffect.get(), effect.duration(), effect.amplifier(), true, true));
-        });
     }
 
     /**
@@ -110,15 +97,23 @@ public class CampfirePassiveRegenBehavior {
     private record HealData(float healAmount, float exhaustionAmount) {}
 
     /**
-     * Indicate to the given player if they are currently regenerating from a campfire.
+     * Applies effects to the given player that should apply while they are regenerating from a campfire.
      */
-    private static void indicateIfPlayerIsRegenerating(ServerPlayer player, CampfireBlockEntity campfire) {
+    private static void applyRegenerationEffects(ServerPlayer player, CampfireBlockEntity campfire) {
         if (getAmountPlayerShouldHeal(player, campfire) == null) return;
-        player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 5, 0, true, true, true));
+        boolean isFirstTick = !player.hasEffect(MobEffects.REGENERATION);
+        indicatePlayerIsRegenerating(player);
 
         if (campfire.getBlockState().is(Blocks.SOUL_CAMPFIRE)) {
-            applySoulfireHealingEffects(player);
+            SoulfireBehavior.onPlayerIsRegenerating(player, campfire, isFirstTick);
         }
+    }
+
+    /**
+     * Shows a cosmetic Regeneration effect on the given player to indicate they are regenerating from a campfire.
+     */
+    private static void indicatePlayerIsRegenerating(ServerPlayer player) {
+        player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 5, 0, true, true, true));
     }
 
     /**

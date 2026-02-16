@@ -5,6 +5,7 @@ import dev.gimme.campfirehealing.ServerConfig;
 import dev.gimme.config.ModConfigSpec;
 import dev.gimme.config.ModConfigSpec.ConfigValue;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.effect.MobEffectInstance;
 
 import java.util.List;
 import java.util.Objects;
@@ -67,8 +68,7 @@ public class NightServerConfig extends ServerConfig {
     private static final ConfigValue<Number> CAMPFIRE_REQUIRED_FOOD_LEVEL = SPEC.variable()
         .comment("""
             Minimum food level players must have to be healed by Campfire regeneration.
-            Natural regeneration in vanilla requires 18.
-            Setting this to 1 allows it to starve you out completely.""")
+            Natural regeneration in vanilla requires 18.""")
         .define("campfireRequiredFoodLevel", 18);
 
     private static final ConfigValue<Number> CAMPFIRE_REQUIRED_PLAYERS = SPEC.variable()
@@ -93,7 +93,7 @@ public class NightServerConfig extends ServerConfig {
         .comment("""
             Multiplier for the amount of health restored by Soul Campfire compared to Campfire.
             For example, setting this to 0.5 makes Soul Campfire heal half as much per tick.""")
-        .define("soulfireHealMultiplier", 0.5);
+        .define("soulfireHealMultiplier", 0.75);
 
     private static final ConfigValue<Number> SOULFIRE_EXHAUSTION_MULTIPLIER = SPEC.variable()
         .comment("""
@@ -108,15 +108,16 @@ public class NightServerConfig extends ServerConfig {
 
     private static final ConfigValue<Number> SOULFIRE_REQUIRED_FOOD_LEVEL = SPEC.variable()
         .comment("""
-            Minimum food level players must have to be healed by Soul Campfire regeneration.""")
+            Minimum food level players must have to be healed by Soul Campfire regeneration.
+            Setting this to 1 allows it to starve you out completely.""")
         .define("soulfireRequiredFoodLevel", 1);
 
     private static final ConfigValue<List<String>> SOULFIRE_FUEL = SPEC.variable()
         .comment("""
                     List of items that can be used as fuel for Soul Campfires, along with how many seconds of fuel they provide.
                     Format: "itemRegex,durationSeconds"
-                    Example: ["rotten_flesh,60", "bone,10"]""")
-        .define("soulfireFuel", List.of("rotten_flesh,60"));
+                    Example: ["rotten_flesh,60", "bone,30"]""")
+        .define("soulfireFuel", List.of("rotten_flesh,60", "bone,30", "blaze_rod,120", "ghast_tear,300"));
 
     private static final ConfigValue<Boolean> SOULFIRE_LIT_BY_FUEL = SPEC.variable()
         .comment("""
@@ -127,9 +128,23 @@ public class NightServerConfig extends ServerConfig {
     private static final ConfigValue<List<String>> SOULFIRE_HEALING_EFFECTS = SPEC.variable()
         .comment("""
                     List of effects players get when they heal from a Soul Campfire.
+                    A duration of -1 means infinite.
                     Format: "effectId,durationSeconds[0],amplifier[1]"
-                    Example: ["hunger", "nausea,4", "weakness,5,2"]""")
-        .define("soulfireHealingEffects", List.of("hunger", "darkness,1", "slowness", "weakness,5,2", "infested,300"));
+                    Example: ["hunger", "nausea,4", "weakness,1,2", "infested,-1"]""")
+        .define("soulfireHealingEffects", List.of("hunger", "darkness,1", "slowness", "weakness,1,2", "weakness,10,1", "infested,-1"));
+
+    private static final ConfigValue<Boolean> INFESTED_ENDS_WHEN_SILVERFISH_COME_OUT = SPEC.variable()
+        .comment("""
+            If true, when Silverfish spawn from an Infested player, the Infested effect and all other effects that have the same
+            duration will be cleared from the player.
+            This is a thematic feature that allows you to, for example, apply an infinite Infested effect (combined with
+            any other negative/positive effects) that only ends when the Silverfish that "infest" you actually come out.""")
+        .define("infestedEndsWhenSilverfishComeOut", true);
+
+    private static final ConfigValue<Boolean> PREVENT_MILK_FROM_CLEARING_INFESTED = SPEC.variable()
+        .comment("""
+            If true, drinking milk will not clear the effects associated with being "infested".""")
+        .define("preventMilkFromClearingInfested", false);
 
     private static final ConfigValue<Number> SOULFIRE_MIN_Y_OVERWORLD = SPEC.variable()
         .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in the Overworld.")
@@ -299,10 +314,22 @@ public class NightServerConfig extends ServerConfig {
                     }
                 }
 
-                return new Effect(effectId, 5 + (int) (durationSeconds * 20), amplifier);
+                // Pad the duration by a few ticks to avoid flickering issues for whole second durations.
+                int duration = durationSeconds == -1 ? MobEffectInstance.INFINITE_DURATION : 5 + (int) (durationSeconds * 20);
+                return new Effect(effectId, duration, amplifier);
             })
             .filter(Objects::nonNull)
             .collect(java.util.stream.Collectors.toSet());
+    }
+
+    @Override
+    public boolean doesInfestedEndWhenSilverfishComeOut() {
+        return INFESTED_ENDS_WHEN_SILVERFISH_COME_OUT.get();
+    }
+
+    @Override
+    public boolean isMilkPreventedFromClearingInfested() {
+        return PREVENT_MILK_FROM_CLEARING_INFESTED.get();
     }
 
     @Override
