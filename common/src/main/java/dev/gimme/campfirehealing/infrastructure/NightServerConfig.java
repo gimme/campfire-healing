@@ -109,7 +109,8 @@ public class NightServerConfig extends ServerConfig {
     private static final ConfigValue<Number> SOULFIRE_REQUIRED_FOOD_LEVEL = SPEC.variable()
         .comment("""
             Minimum food level players must have to be healed by Soul Campfire regeneration.
-            Setting this to 1 allows it to starve you out completely.""")
+            Setting this to 1 allows it to starve you out completely.
+            Setting this to 0 allows it to keep healing you even when starving.""")
         .define("soulfireRequiredFoodLevel", 1);
 
     private static final ConfigValue<List<String>> SOULFIRE_FUEL = SPEC.variable()

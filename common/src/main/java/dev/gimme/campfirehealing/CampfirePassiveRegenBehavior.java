@@ -77,10 +77,9 @@ public class CampfirePassiveRegenBehavior {
         var foodLevelRequirement = campfire.getBlockState().is(Blocks.SOUL_CAMPFIRE)
             ? Main.INSTANCE.getServerConfig().getSoulfireRequiredFoodLevel()
             : Main.INSTANCE.getServerConfig().getCampfireRequiredFoodLevel();
-        int foodLevelRequirement1 = Math.max(foodLevelRequirement, 1);
         int foodLevelRequirement2 = Math.min(foodLevelRequirement + 2, 20);
 
-        if (foodData.getFoodLevel() < foodLevelRequirement1 && exhaustionAmount > 0) return null;
+        if (foodData.getFoodLevel() < foodLevelRequirement && exhaustionAmount > 0) return null;
         if (foodData.getFoodLevel() >= foodLevelRequirement2 && foodData.getSaturationLevel() > 0) {
             float saturationMultiplier = Main.INSTANCE.getServerConfig().getCampfireSaturationHealMultiplier();
             healAmount *= saturationMultiplier;
