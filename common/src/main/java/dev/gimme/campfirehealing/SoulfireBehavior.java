@@ -111,6 +111,7 @@ public class SoulfireBehavior {
         int maxFuelDurationLeft = 0;
         for (int i = 0; i < items.size(); i++) {
             if (!isSoulFuelItem(items.get(i), level)) continue;
+            if (cookingTime[i] == Integer.MAX_VALUE) return 0;
 
             var fuelDurationLeft = cookingTime[i] - cookingProgress[i];
             if (fuelDurationLeft > maxFuelDurationLeft) {
@@ -128,6 +129,7 @@ public class SoulfireBehavior {
                 .map(ServerConfig.SoulfireFuel::duration)
                 .orElse(0);
 
+        if (fuelValue == -1) return Integer.MAX_VALUE;
         return maxFuelDurationLeft + fuelValue;
     }
 

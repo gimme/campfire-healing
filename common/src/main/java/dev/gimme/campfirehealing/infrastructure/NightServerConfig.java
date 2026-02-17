@@ -115,10 +115,11 @@ public class NightServerConfig extends ServerConfig {
 
     private static final ConfigValue<List<String>> SOULFIRE_FUEL = SPEC.variable()
         .comment("""
-                    List of items that can be used as fuel for Soul Campfires, along with how many seconds of fuel they provide.
-                    Format: "itemRegex,durationSeconds"
-                    Example: ["rotten_flesh,60", "bone,30"]""")
-        .define("soulfireFuel", List.of("rotten_flesh,60", "bone,60", "ender_pearl,60", "blaze_rod,60", "ghast_tear,300", "magma_cream,10"));
+            List of items that can be used as fuel for Soul Campfires, along with how many seconds of fuel they provide.
+            A duration of -1 means infinite.
+            Format: "itemRegex,durationSeconds"
+            Example: ["rotten_flesh,60", "bone,30"]""")
+        .define("soulfireFuel", List.of("rotten_flesh,60", "bone,20", "ender_pearl,30", "blaze_rod,30", "ghast_tear,-1", "magma_cream,5"));
 
     private static final ConfigValue<Boolean> SOULFIRE_LIT_BY_FUEL = SPEC.variable()
         .comment("""
@@ -128,11 +129,11 @@ public class NightServerConfig extends ServerConfig {
 
     private static final ConfigValue<List<String>> SOULFIRE_HEALING_EFFECTS = SPEC.variable()
         .comment("""
-                    List of effects players get when they heal from a Soul Campfire.
-                    A duration of -1 means infinite.
-                    Format: "effectId,durationSeconds[0],amplifier[1]"
-                    Example: ["hunger", "nausea,4", "weakness,1,2", "infested,-1"]""")
-        .define("soulfireHealingEffects", List.of("hunger", "darkness,1", "weakness,1,2", "infested,-1", "weakness,-1", "slowness,-1"));
+            List of effects players get when they heal from a Soul Campfire.
+            A duration of -1 means infinite.
+            Format: "effectId,durationSeconds[0],amplifier[1]"
+            Example: ["hunger", "darkness,1", "nausea,4", "weakness,1,255", "infested,-1", "weakness,-1", "slowness,-1", "mining_fatigue,-1"]""")
+        .define("soulfireHealingEffects", List.of("hunger", "darkness,1", "weakness,1,10", "infested,-1", "weakness,-1"));
 
     private static final ConfigValue<Boolean> INFESTED_ENDS_WHEN_SILVERFISH_COME_OUT = SPEC.variable()
         .comment("""
@@ -263,19 +264,24 @@ public class NightServerConfig extends ServerConfig {
                     return null;
                 }
 
-                double durationSeconds = -1;
+                double durationSeconds = 0;
                 if (parts.length > 1) {
                     try {
                         durationSeconds = Double.parseDouble(parts[1].trim());
                     } catch (Exception ignored) {
                     }
                 }
-                if (durationSeconds <= 0) {
+                if (durationSeconds == 0) {
                     Constants.LOG.warn("Invalid durationSeconds for soulfireFuel: \"{}\"", fuelString);
                     return null;
                 }
 
-                return new SoulfireFuel(itemRegex, (int) (durationSeconds * 20));
+                int duration = durationSeconds == -1
+                    ? -1
+                    : durationSeconds > 31536000 // More than 1 year of fuel is probably a mistake, treat it as infinite to avoid overflow issues when converting to ticks
+                        ? -1
+                        : (int) (durationSeconds * 20);
+                return new SoulfireFuel(itemRegex, duration);
             })
             .filter(Objects::nonNull)
             .collect(java.util.stream.Collectors.toSet());
