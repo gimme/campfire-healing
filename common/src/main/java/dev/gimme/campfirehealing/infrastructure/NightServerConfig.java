@@ -118,7 +118,7 @@ public class NightServerConfig extends ServerConfig {
                     List of items that can be used as fuel for Soul Campfires, along with how many seconds of fuel they provide.
                     Format: "itemRegex,durationSeconds"
                     Example: ["rotten_flesh,60", "bone,30"]""")
-        .define("soulfireFuel", List.of("rotten_flesh,60", "bone,30", "blaze_rod,120", "ghast_tear,300"));
+        .define("soulfireFuel", List.of("rotten_flesh,60", "bone,60", "ender_pearl,60", "blaze_rod,60", "ghast_tear,300", "magma_cream,10"));
 
     private static final ConfigValue<Boolean> SOULFIRE_LIT_BY_FUEL = SPEC.variable()
         .comment("""
@@ -132,7 +132,7 @@ public class NightServerConfig extends ServerConfig {
                     A duration of -1 means infinite.
                     Format: "effectId,durationSeconds[0],amplifier[1]"
                     Example: ["hunger", "nausea,4", "weakness,1,2", "infested,-1"]""")
-        .define("soulfireHealingEffects", List.of("hunger", "darkness,1", "slowness", "weakness,1,2", "weakness,10,1", "infested,-1"));
+        .define("soulfireHealingEffects", List.of("hunger", "darkness,1", "weakness,1,2", "infested,-1", "weakness,-1", "slowness,-1"));
 
     private static final ConfigValue<Boolean> INFESTED_ENDS_WHEN_SILVERFISH_COME_OUT = SPEC.variable()
         .comment("""
@@ -142,10 +142,11 @@ public class NightServerConfig extends ServerConfig {
             any other negative/positive effects) that only ends when the Silverfish that "infest" you actually come out.""")
         .define("infestedEndsWhenSilverfishComeOut", true);
 
-    private static final ConfigValue<Boolean> PREVENT_MILK_FROM_CLEARING_INFESTED = SPEC.variable()
+    private static final ConfigValue<Boolean> MILK_CURES_INFESTED = SPEC.variable()
         .comment("""
-            If true, drinking milk will not clear the effects associated with being "infested".""")
-        .define("preventMilkFromClearingInfested", false);
+            If true, drinking milk will force the Silverfish to spawn out of an "infested" player, curing all associated
+            effects in the process. Otherwise, milk will have no effect on the "infested" status.""")
+        .define("milkCuresInfested", true);
 
     private static final ConfigValue<Number> SOULFIRE_MIN_Y_OVERWORLD = SPEC.variable()
         .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in the Overworld.")
@@ -329,8 +330,8 @@ public class NightServerConfig extends ServerConfig {
     }
 
     @Override
-    public boolean isMilkPreventedFromClearingInfested() {
-        return PREVENT_MILK_FROM_CLEARING_INFESTED.get();
+    public boolean doesMilkCureInfested() {
+        return MILK_CURES_INFESTED.get();
     }
 
     @Override

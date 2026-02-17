@@ -197,10 +197,10 @@ public class SoulfireBehavior {
     private static void playInfestedSound(ServerPlayer player) {
         player.level().playSound(
             null, player.getX(), player.getY(), player.getZ(),
-            SoundEvents.SPIDER_STEP,
+            SoundEvents.SILVERFISH_STEP,
             SoundSource.NEUTRAL,
             1.0f,
-            2f
+            1.0f
         );
     }
 

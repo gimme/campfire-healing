@@ -33,7 +33,7 @@ public abstract class ServerConfig {
     public abstract boolean isSoulfireLitByFuel();
     protected abstract Set<Effect> getSoulfireHealingEffects();
     public abstract boolean doesInfestedEndWhenSilverfishComeOut();
-    public abstract boolean isMilkPreventedFromClearingInfested();
+    public abstract boolean doesMilkCureInfested();
     protected abstract int getSoulfireMinYLevelOverworld();
     protected abstract int getSoulfireMinYLevelNether();
     protected abstract int getSoulfireMinYLevelOther();
