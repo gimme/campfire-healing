@@ -215,10 +215,10 @@ public class SoulfireBehavior {
 
         level.playSound(
             null, x, y, z,
-            SoundEvents.AMBIENT_SOUL_SAND_VALLEY_MOOD,
-            SoundSource.AMBIENT,
-            0.5f,
-            2f
+            SoundEvents.PHANTOM_AMBIENT,
+            SoundSource.BLOCKS,
+            1f,
+            0.5f
         );
     }
 }
