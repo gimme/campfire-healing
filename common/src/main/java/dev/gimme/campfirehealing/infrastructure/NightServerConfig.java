@@ -119,7 +119,7 @@ public class NightServerConfig extends ServerConfig {
             A duration of -1 means infinite.
             Format: "itemRegex,durationSeconds"
             Example: ["rotten_flesh,60", "bone,30"]""")
-        .define("soulfireFuel", List.of("rotten_flesh,60", "bone,20", "ender_pearl,30", "blaze_rod,30", "ghast_tear,-1", "magma_cream,5"));
+        .define("soulfireFuel", List.of("rotten_flesh,60", "bone,15", "ender_pearl,15", "blaze_rod,15", "ghast_tear,300", "magma_cream,5"));
 
     private static final ConfigValue<Boolean> SOULFIRE_LIT_BY_FUEL = SPEC.variable()
         .comment("""
