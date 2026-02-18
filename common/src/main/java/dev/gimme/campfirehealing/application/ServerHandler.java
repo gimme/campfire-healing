@@ -5,13 +5,7 @@ import net.minecraft.server.MinecraftServer;
 
 public class ServerHandler {
 
-    private final MinecraftServer server;
-
-    public ServerHandler(MinecraftServer server) {
-        this.server = server;
-    }
-
-    public void onServerTick() {
+    public void onServerTick(MinecraftServer server) {
         InfestedRemovalQueue.flush(server);
     }
 }
