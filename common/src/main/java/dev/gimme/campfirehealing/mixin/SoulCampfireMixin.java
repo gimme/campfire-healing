@@ -80,7 +80,7 @@ public class SoulCampfireMixin {
     /**
      * Triggers side effects of fuel being placed in Soul Campfires.
      */
-    @Inject(method = "placeFood", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/CampfireBlockEntity;markUpdated()V"))
+    @Inject(method = "placeFood", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;consumeAndReturn(ILnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/item/ItemStack;"))
     private void onPlaceFuel(ServerLevel level, @Nullable LivingEntity entity, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
         var campfire = (CampfireBlockEntity) (Object) this;
         if (!SoulfireBehavior.isSoulFuel(campfire, itemStack, level)) return;
