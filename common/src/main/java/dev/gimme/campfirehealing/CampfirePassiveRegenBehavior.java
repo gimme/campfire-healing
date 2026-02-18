@@ -82,8 +82,9 @@ public class CampfirePassiveRegenBehavior {
         if (foodData.getFoodLevel() < foodLevelRequirement && exhaustionAmount > 0) return null;
         if (foodData.getFoodLevel() >= foodLevelRequirement2 && foodData.getSaturationLevel() > 0) {
             float saturationMultiplier = Main.INSTANCE.getServerConfig().getCampfireSaturationHealMultiplier();
-            healAmount *= saturationMultiplier;
-            exhaustionAmount *= saturationMultiplier;
+            float coefficient = Math.min(foodData.getSaturationLevel(), 6.0f) / 6.0f;
+            healAmount *= coefficient * saturationMultiplier;
+            exhaustionAmount *= coefficient * saturationMultiplier;
         }
 
         float maxHealTo = player.getMaxHealth() * Main.INSTANCE.getServerConfig().getCampfireMaxHealToPercentage(campfire);
