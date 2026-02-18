@@ -45,7 +45,7 @@ public class SoulCampfireLightingMixin {
     }
 
     /**
-     * Prevents lighting Soul Campfires with right.
+     * Prevents lighting Soul Campfires with right click.
      */
     @Inject(method = "canLight", at = @At("HEAD"), cancellable = true)
     private static void preventNaturalLighting(BlockState blockState, CallbackInfoReturnable<Boolean> cir) {

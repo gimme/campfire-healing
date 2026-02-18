@@ -19,7 +19,7 @@ public class SoulCampfireInteractMixin {
      */
     @Redirect(method = "useItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/crafting/RecipePropertySet;test(Lnet/minecraft/world/item/ItemStack;)Z"))
     private boolean allowCustomFuelUse(RecipePropertySet instance, ItemStack itemStack, ItemStack p_316347_, BlockState state, Level level) {
-        if (state.is(Blocks.SOUL_CAMPFIRE) && SoulfireBehavior.isSoulFuelItem(itemStack, level)) return true;
+        if (!level.isClientSide() && state.is(Blocks.SOUL_CAMPFIRE) && SoulfireBehavior.isSoulFuelItem(itemStack, level)) return true;
         return instance.test(itemStack);
     }
 }

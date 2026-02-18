@@ -16,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -166,7 +167,7 @@ public class SoulfireBehavior {
     /**
      * Returns if the given identifier matches the given regex, either as a full string or just the path (ignoring namespace).
      */
-    private static boolean matchesRegex(Identifier identifier, String regex) {
+    private static boolean matchesRegex(@Nullable Identifier identifier, String regex) {
         if (identifier == null) return false;
         return identifier.toString().matches(regex) || identifier.getPath().matches(regex);
     }

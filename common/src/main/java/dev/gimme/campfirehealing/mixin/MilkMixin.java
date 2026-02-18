@@ -38,9 +38,9 @@ public class MilkMixin {
      */
     @Inject(method = "apply", at = @At("HEAD"), cancellable = true)
     private void disableMilkClearingInfected(Level level, ItemStack itemStack, LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
+        if (!(level instanceof ServerLevel serverLevel)) return;
         if (!Main.INSTANCE.getServerConfig().doesInfestedEndWhenSilverfishComeOut()) return;
         if (!(entity instanceof ServerPlayer player)) return;
-        var serverLevel = (ServerLevel) level;
 
         Set<Holder<MobEffect>> infestedEffects = InfestedRemovalQueue.getInfestedEffects(player)
             .map(MobEffectInstance::getEffect)
