@@ -1,4 +1,4 @@
-package dev.gimme.campfirehealing.mixin;
+package dev.gimme.campfirehealing.mixin.soulfire;
 
 import dev.gimme.campfirehealing.Main;
 import net.minecraft.world.entity.projectile.Projectile;

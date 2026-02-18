@@ -1,6 +1,6 @@
 package dev.gimme.campfirehealing.application;
 
-import dev.gimme.campfirehealing.InfestedRemovalQueue;
+import dev.gimme.campfirehealing.domain.infested.InfestedRemovalQueue;
 import net.minecraft.server.MinecraftServer;
 
 public class ServerHandler {

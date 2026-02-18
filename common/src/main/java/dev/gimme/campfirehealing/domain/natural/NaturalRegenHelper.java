@@ -1,5 +1,6 @@
-package dev.gimme.campfirehealing;
+package dev.gimme.campfirehealing.domain.natural;
 
+import dev.gimme.campfirehealing.Main;
 import net.minecraft.server.level.ServerPlayer;
 
 /**

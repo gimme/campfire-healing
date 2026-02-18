@@ -1,6 +1,6 @@
-package dev.gimme.campfirehealing.mixin;
+package dev.gimme.campfirehealing.mixin.infested;
 
-import dev.gimme.campfirehealing.InfestedRemovalQueue;
+import dev.gimme.campfirehealing.domain.infested.InfestedRemovalQueue;
 import dev.gimme.campfirehealing.Main;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

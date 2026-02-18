@@ -1,6 +1,7 @@
-package dev.gimme.campfirehealing;
+package dev.gimme.campfirehealing.domain.campfire;
 
-import net.minecraft.core.registries.Registries;
+import dev.gimme.campfirehealing.Main;
+import dev.gimme.campfirehealing.domain.soulfire.SoulfireBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;

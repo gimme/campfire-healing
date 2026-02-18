@@ -1,6 +1,6 @@
-package dev.gimme.campfirehealing.mixin;
+package dev.gimme.campfirehealing.mixin.soulfire;
 
-import dev.gimme.campfirehealing.SoulfireBehavior;
+import dev.gimme.campfirehealing.domain.soulfire.SoulfireBehavior;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipePropertySet;
 import net.minecraft.world.level.Level;

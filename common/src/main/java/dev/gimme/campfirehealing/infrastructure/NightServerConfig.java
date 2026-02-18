@@ -1,7 +1,7 @@
 package dev.gimme.campfirehealing.infrastructure;
 
-import dev.gimme.campfirehealing.Constants;
-import dev.gimme.campfirehealing.ServerConfig;
+import dev.gimme.campfirehealing.domain.Constants;
+import dev.gimme.campfirehealing.domain.ServerConfig;
 import dev.gimme.config.ModConfigSpec;
 import dev.gimme.config.ModConfigSpec.ConfigValue;
 import net.minecraft.resources.Identifier;

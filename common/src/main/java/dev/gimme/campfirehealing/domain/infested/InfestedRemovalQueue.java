@@ -1,4 +1,4 @@
-package dev.gimme.campfirehealing;
+package dev.gimme.campfirehealing.domain.infested;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;

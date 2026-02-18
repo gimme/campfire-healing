@@ -1,5 +1,6 @@
-package dev.gimme.campfirehealing;
+package dev.gimme.campfirehealing.domain;
 
+import dev.gimme.campfirehealing.Main;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
@@ -31,7 +32,7 @@ public abstract class ServerConfig {
     public abstract int getSoulfireRequiredFoodLevel();
     public abstract Set<SoulfireFuel> getSoulfireFuel();
     public abstract boolean isSoulfireLitByFuel();
-    protected abstract Set<Effect> getSoulfireHealingEffects();
+    public abstract Set<Effect> getSoulfireHealingEffects();
     public abstract boolean doesInfestedEndWhenSilverfishComeOut();
     public abstract boolean doesMilkCureInfested();
     protected abstract int getSoulfireMinYLevelOverworld();

@@ -1,5 +1,8 @@
-package dev.gimme.campfirehealing;
+package dev.gimme.campfirehealing.domain.soulfire;
 
+import dev.gimme.campfirehealing.Main;
+import dev.gimme.campfirehealing.domain.Constants;
+import dev.gimme.campfirehealing.domain.ServerConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;

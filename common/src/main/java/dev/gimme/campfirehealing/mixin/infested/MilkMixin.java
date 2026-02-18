@@ -1,7 +1,7 @@
-package dev.gimme.campfirehealing.mixin;
+package dev.gimme.campfirehealing.mixin.infested;
 
 import com.google.common.collect.Sets;
-import dev.gimme.campfirehealing.InfestedRemovalQueue;
+import dev.gimme.campfirehealing.domain.infested.InfestedRemovalQueue;
 import dev.gimme.campfirehealing.Main;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;

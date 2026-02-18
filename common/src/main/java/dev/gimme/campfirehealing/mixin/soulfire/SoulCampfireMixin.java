@@ -1,6 +1,6 @@
-package dev.gimme.campfirehealing.mixin;
+package dev.gimme.campfirehealing.mixin.soulfire;
 
-import dev.gimme.campfirehealing.SoulfireBehavior;
+import dev.gimme.campfirehealing.domain.soulfire.SoulfireBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;

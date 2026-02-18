@@ -1,4 +1,4 @@
-package dev.gimme.campfirehealing;
+package dev.gimme.campfirehealing.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

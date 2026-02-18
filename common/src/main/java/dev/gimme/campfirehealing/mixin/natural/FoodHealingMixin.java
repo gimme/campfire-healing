@@ -1,4 +1,4 @@
-package dev.gimme.campfirehealing.mixin;
+package dev.gimme.campfirehealing.mixin.natural;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.food.FoodData;
@@ -8,9 +8,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static dev.gimme.campfirehealing.NaturalRegenHelper.getRegenTicks;
-import static dev.gimme.campfirehealing.NaturalRegenHelper.isModFeatureDisabled;
-import static dev.gimme.campfirehealing.NaturalRegenHelper.isRegenStopped;
+import static dev.gimme.campfirehealing.domain.natural.NaturalRegenHelper.getRegenTicks;
+import static dev.gimme.campfirehealing.domain.natural.NaturalRegenHelper.isModFeatureDisabled;
+import static dev.gimme.campfirehealing.domain.natural.NaturalRegenHelper.isRegenStopped;
 
 /**
  * Modifies natural health regeneration speed.

@@ -1,6 +1,6 @@
 package dev.gimme.campfirehealing.neoforge;
 
-import dev.gimme.campfirehealing.Constants;
+import dev.gimme.campfirehealing.domain.Constants;
 import dev.gimme.campfirehealing.Main;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;

@@ -1,6 +1,6 @@
-package dev.gimme.campfirehealing.mixin;
+package dev.gimme.campfirehealing.mixin.campfire;
 
-import dev.gimme.campfirehealing.CampfirePassiveRegenBehavior;
+import dev.gimme.campfirehealing.domain.campfire.CampfirePassiveRegenBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
