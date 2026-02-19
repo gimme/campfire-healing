@@ -119,8 +119,8 @@ public class NightServerConfig extends ServerConfig {
             The item can be specified as a regex matching the item with or without namespace (e.g. "minecraft:rotten_flesh").
             A duration of -1 means infinite.
             Format: "item,seconds"
-            Example: ["rotten_flesh,60", "bone,30"]""")
-        .define("soulfire.fuel", List.of("rotten_flesh,60", "bone,15", "ender_pearl,15", "blaze_rod,15", "ghast_tear,300", "magma_cream,5"));
+            Example: ["rotten_flesh,60", "bone,15", "ender_pearl,15", "blaze_rod,15", "ghast_tear,300", "magma_cream,5"]""")
+        .define("soulfire.fuel", List.of("rotten_flesh,60"));
 
     private static final ConfigValue<Boolean> SOULFIRE_LIT_BY_FUEL = SPEC.variable()
         .comment("""
@@ -134,7 +134,7 @@ public class NightServerConfig extends ServerConfig {
             A duration of -1 means infinite.
             Format: "effect,seconds[0],level[1]"
             Example: ["hunger", "darkness,1", "nausea,4", "weakness,1,255", "infested,-1", "weakness,-1", "slowness,-1", "mining_fatigue,-1"]""")
-        .define("soulfire.healingEffects", List.of("hunger", "darkness,1", "weakness,1,10", "infested,-1", "weakness,-1"));
+        .define("soulfire.healingEffects", List.of("hunger", "darkness,1", "weakness,1,255", "infested,-1"));
 
     private static final ConfigValue<Number> SOULFIRE_MIN_Y_OVERWORLD = SPEC.variable()
         .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in the Overworld.")
