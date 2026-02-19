@@ -136,20 +136,6 @@ public class NightServerConfig extends ServerConfig {
             Example: ["hunger", "darkness,1", "nausea,4", "weakness,1,255", "infested,-1", "weakness,-1", "slowness,-1", "mining_fatigue,-1"]""")
         .define("soulfire.healingEffects", List.of("hunger", "darkness,1", "weakness,1,10", "infested,-1", "weakness,-1"));
 
-    private static final ConfigValue<Boolean> INFESTED_ENDS_WHEN_SILVERFISH_COME_OUT = SPEC.variable()
-        .comment("""
-            If true, when Silverfish spawn from an Infested player, the Infested effect and all other effects that have the same
-            duration will be cleared from the player.
-            This is a thematic feature that allows you to, for example, apply an infinite Infested effect (combined with
-            any other negative/positive effects) that only ends when the Silverfish that "infest" you actually come out.""")
-        .define("infested.endsWhenTriggered", true);
-
-    private static final ConfigValue<Boolean> MILK_CURES_INFESTED = SPEC.variable()
-        .comment("""
-            If true, drinking milk will force the Silverfish to spawn out of an "infested" player, curing all associated
-            effects in the process. Otherwise, milk will have no effect on the "infested" status.""")
-        .define("infested.curedByMilk", true);
-
     private static final ConfigValue<Number> SOULFIRE_MIN_Y_OVERWORLD = SPEC.variable()
         .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in the Overworld.")
         .define("soulfire.minYOverworld", -1000);
@@ -167,6 +153,25 @@ public class NightServerConfig extends ServerConfig {
             The maximum Y-level a Soul Campfire must be placed at to provide regeneration in the Nether.
             For example, setting this to 31 means that it has to be placed below the lava level.""")
         .define("soulfire.maxYNether", 1000);
+
+    private static final ConfigValue<Boolean> INFESTED_ENDS_WHEN_SILVERFISH_COME_OUT = SPEC.variable()
+        .comment("""
+            If true, when Silverfish spawn from an Infested player, the Infested effect and all other effects that have the same
+            duration will be cleared from the player.
+            This is a thematic feature that allows you to, for example, apply an infinite Infested effect (combined with
+            any other negative/positive effects) that only ends when the Silverfish that "infest" you actually come out.""")
+        .define("infested.endsWhenTriggered", true);
+
+    private static final ConfigValue<Boolean> MILK_CURES_INFESTED = SPEC.variable()
+        .comment("""
+            If true, drinking milk will force the Silverfish to spawn out of an "infested" player, curing all associated
+            effects in the process. Otherwise, milk will have no effect on the "infested" status.""")
+        .define("infested.curedByMilk", true);
+
+    private static final ConfigValue<Boolean> INFESTED_HEARS_MOVING_SOUND = SPEC.variable()
+        .comment("""
+            If true, infested players will hear the sound of Silverfish moving in their head whenever they take damage.""")
+        .define("infested.hearsMovingSound", true);
 
     @Override
     public float getNaturalRegenSpeedMultiplier() {
@@ -332,16 +337,6 @@ public class NightServerConfig extends ServerConfig {
     }
 
     @Override
-    public boolean doesInfestedEndWhenSilverfishComeOut() {
-        return INFESTED_ENDS_WHEN_SILVERFISH_COME_OUT.get();
-    }
-
-    @Override
-    public boolean doesMilkCureInfested() {
-        return MILK_CURES_INFESTED.get();
-    }
-
-    @Override
     public int getSoulfireMinYLevelOverworld() {
         return SOULFIRE_MIN_Y_OVERWORLD.get().intValue();
     }
@@ -359,5 +354,20 @@ public class NightServerConfig extends ServerConfig {
     @Override
     public int getSoulfireMaxYLevelNether() {
         return SOULFIRE_MAX_Y_NETHER.get().intValue();
+    }
+
+    @Override
+    public boolean doesInfestedEndWhenSilverfishComeOut() {
+        return INFESTED_ENDS_WHEN_SILVERFISH_COME_OUT.get();
+    }
+
+    @Override
+    public boolean doesMilkCureInfested() {
+        return MILK_CURES_INFESTED.get();
+    }
+
+    @Override
+    public boolean doesInfestedHearMovingSound() {
+        return INFESTED_HEARS_MOVING_SOUND.get();
     }
 }

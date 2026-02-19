@@ -3,6 +3,7 @@ package dev.gimme.campfirehealing.domain.soulfire;
 import dev.gimme.campfirehealing.Main;
 import dev.gimme.campfirehealing.domain.Constants;
 import dev.gimme.campfirehealing.domain.ServerConfig;
+import dev.gimme.campfirehealing.domain.infested.InfestedBehavior;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
@@ -181,7 +182,7 @@ public class SoulfireBehavior {
         boolean isPlayerInfested = player.hasEffect(MobEffects.INFESTED);
 
         if (!wasPlayerInfested && isPlayerInfested) {
-            playInfestedSound(player);
+            InfestedBehavior.playInfestedSound(player);
         }
         if (isFirstTick) {
             playEerieSound(campfire);
@@ -198,16 +199,6 @@ public class SoulfireBehavior {
             }
             player.addEffect(new MobEffectInstance(mobEffect.get(), effect.duration(), effect.amplifier(), true, true));
         }
-    }
-
-    private static void playInfestedSound(ServerPlayer player) {
-        player.level().playSound(
-            null, player.getX(), player.getY(), player.getZ(),
-            SoundEvents.SILVERFISH_STEP,
-            SoundSource.NEUTRAL,
-            1.0f,
-            1.0f
-        );
     }
 
     private static void playEerieSound(CampfireBlockEntity campfire) {

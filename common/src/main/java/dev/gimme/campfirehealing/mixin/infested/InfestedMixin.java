@@ -1,9 +1,11 @@
 package dev.gimme.campfirehealing.mixin.infested;
 
+import dev.gimme.campfirehealing.domain.infested.InfestedBehavior;
 import dev.gimme.campfirehealing.domain.infested.InfestedRemovalQueue;
 import dev.gimme.campfirehealing.Main;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,5 +24,16 @@ public class InfestedMixin {
         if (!(entity instanceof ServerPlayer player)) return;
 
         InfestedRemovalQueue.queue(player);
+    }
+
+    /**
+     * Plays a sound when the player is hurt while having the "infested" effect.
+     */
+    @Inject(method = "onMobHurt", at = @At("HEAD"))
+    private void onInfestedHurt(ServerLevel level, LivingEntity entity, int amplifier, DamageSource source, float amount, CallbackInfo ci) {
+        if (!(entity instanceof ServerPlayer player)) return;
+        if (!Main.INSTANCE.getServerConfig().doesInfestedHearMovingSound()) return;
+
+        InfestedBehavior.playInfestedSound(player);
     }
 }

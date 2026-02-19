@@ -33,12 +33,13 @@ public abstract class ServerConfig {
     public abstract Set<SoulfireFuel> getSoulfireFuel();
     public abstract boolean isSoulfireLitByFuel();
     public abstract Set<Effect> getSoulfireHealingEffects();
-    public abstract boolean doesInfestedEndWhenSilverfishComeOut();
-    public abstract boolean doesMilkCureInfested();
     protected abstract int getSoulfireMinYLevelOverworld();
     protected abstract int getSoulfireMinYLevelNether();
     protected abstract int getSoulfireMinYLevelOther();
     protected abstract int getSoulfireMaxYLevelNether();
+    public abstract boolean doesInfestedEndWhenSilverfishComeOut();
+    public abstract boolean doesMilkCureInfested();
+    public abstract boolean doesInfestedHearMovingSound();
 
     public float getCampfireHealAmount(CampfireBlockEntity campfire) {
         var healAmount = getCampfireHealAmount();
