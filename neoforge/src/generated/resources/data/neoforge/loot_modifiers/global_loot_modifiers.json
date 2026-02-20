@@ -1,0 +1,10 @@
+{
+  "entries": [
+    "campfirehealing:high_tier_loot_table_modifier",
+    "campfirehealing:nether_loot_table_modifier",
+    "campfirehealing:suspicious_stew_loot_table_modifier",
+    "campfirehealing:low_tier_loot_table_modifier",
+    "campfirehealing:mid_tier_loot_table_modifier"
+  ],
+  "replace": false
+}
