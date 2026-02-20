@@ -6,9 +6,10 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "campfire.CampfireMixin",
-    "natural.FoodHealingMixin",
     "infested.InfestedMixin",
+    "infested.LivingEntityDamageMixin",
     "infested.MilkMixin",
+    "natural.FoodHealingMixin",
     "soulfire.SoulCampfireInteractMixin",
     "soulfire.SoulCampfireLightingMixin",
     "soulfire.SoulCampfireMixin"

@@ -40,6 +40,7 @@ public abstract class ServerConfig {
     public abstract boolean doesInfestedEndWhenSilverfishComeOut();
     public abstract boolean doesMilkCureInfested();
     public abstract boolean doesInfestedHearMovingSound();
+    public abstract float getInfestedDamageMultiplier();
 
     public float getCampfireHealAmount(CampfireBlockEntity campfire) {
         var healAmount = getCampfireHealAmount();

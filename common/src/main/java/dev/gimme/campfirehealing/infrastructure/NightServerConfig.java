@@ -173,6 +173,12 @@ public class NightServerConfig extends ServerConfig {
             If true, infested players will hear the sound of Silverfish moving in their head whenever they take damage.""")
         .define("infested.hearsMovingSound", true);
 
+    private static final ConfigValue<Number> INFESTED_DAMAGE_MULTIPLIER = SPEC.variable()
+        .comment("""
+            Multiplier for damage dealt when Infested.
+            For example, 0.67 means the player deals 67% of their normal damage (a 33% reduction).""")
+        .define("infested.damageMultiplier", 0.67);
+
     @Override
     public float getNaturalRegenSpeedMultiplier() {
         return NATURAL_REGEN_SPEED_MULTIPLIER.get().floatValue();
@@ -369,5 +375,10 @@ public class NightServerConfig extends ServerConfig {
     @Override
     public boolean doesInfestedHearMovingSound() {
         return INFESTED_HEARS_MOVING_SOUND.get();
+    }
+
+    @Override
+    public float getInfestedDamageMultiplier() {
+        return INFESTED_DAMAGE_MULTIPLIER.get().floatValue();
     }
 }
