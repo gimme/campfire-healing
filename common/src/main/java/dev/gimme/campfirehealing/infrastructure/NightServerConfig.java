@@ -328,9 +328,9 @@ public class NightServerConfig extends ServerConfig {
                 int amplifier = 0;
                 if (parts.length > 2) {
                     try {
-                        amplifier = Integer.parseInt(parts[2].trim()) - 1; // Convert from 1-based input to the 0-based code
+                        amplifier = Integer.parseInt(parts[2].trim()) - 1; // Config is 1-based for user-friendliness, but MobEffectInstance expects 0-based
                     } catch (NumberFormatException e) {
-                        Constants.LOG.warn("Invalid amplifier for soulfire.healingEffects: \"{}\"", effectString);
+                        Constants.LOG.warn("Invalid level for soulfire.healingEffects: \"{}\"", effectString);
                     }
                 }
 

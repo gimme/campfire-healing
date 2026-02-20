@@ -1,27 +1,21 @@
 # Campfire Healing
 
-Replaces natural regeneration with campfire healing.
+Replaces natural regeneration with Campfire healing to make survival more challenging and rewarding.
 
 ## Features
-- Natural regeneration is disabled (configurable)
-- Campfires above sea level heal players within 3 blocks
-- Campfire healing costs food just like natural regeneration
-- Soul Campfires work in the Nether consume 4x the food of regular Campfires
+- **Disabled Natural Regeneration**: Natural regeneration is disabled by default, making health a precious resource.
+- **Campfire Healing**: Campfires heal players within a small radius when placed above sea level in the Overworld.
+- **Food Drain**: By default, Campfire healing works just like natural regeneration, draining food and healing faster when saturated.
+- **Soul Campfires**: Soul Campfires work anywhere, but come with a cost. They require Rotten Flesh as fuel, drain food faster, and cause you to be "infested" with parasites.
+- **Infested Effect**: The `Infested` (vanilla) effect reduces your damage dealt by 33%, but ends when the Silverfish parasites come out.
+- **Configuration**: Highly configurable! You can tweak pretty much any aspect of the mod, from healing rates to fuel types and more.
 
-The intent is to make the game harder and make campfires more useful. Early game, campfires allow you to heal whenever you want. When you start mining underground, health becomes a precious resource. You will have to return to base to heal, or rely on items like Suspicious Stew and Golden Apples to survive. Later on, potions become the main source of healing.
-
-## Configuration
-
-Most things you'd expect and more can be configured. Some bonus options include:
-- Enable natural regeneration but make it slow and limit how much it can heal
-- Limit how much campfires can heal you
-- Require a certain number of players to be near the campfire for it to start healing
-- Configure different y-level requirements in different dimensions
-- Choose different settings for Soul Campfires
+## The Design Philosophy
+The intent of this mod is to make the game harder and make Campfires more useful. 
+Early game, Campfires allow you to heal around your base. But when you start mining underground or go to the Nether, health becomes a precious resource. 
+You will have to rely on careful combat and items like Suspicious Stew and Golden Apples to survive until you can return to base. Later on, potions become your main source of healing.
 
 ![Logo](/images/logo.png)
 
-
 ## Credits
-
 Project template used: https://github.com/jaredlll08/MultiLoader-Template

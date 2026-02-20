@@ -12,6 +12,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Option to configure different y-levels for different dimensions
 - Added Fabric support
 - Added unique config options for Soul Campfire
+- Reworked the `Infested` effect to be a thematic parasite that reduces damage dealt and plays a sound when hurt
+- Smoother saturated healing logic
+- Ability to use items as fuel for Soul Campfires
+- Added thematic Soulfire sounds
+
+### Changed
+
+- Updated default configuration values
+
+### Fixed
+
+- Fixed crashes and inconsistencies when vanilla clients connect to a server with the mod installed
+- Fixed an issue where instant-use items could not be used as Soulfire fuel
 
 ## [v1.21.11-0.1.1] - 2026-01-28
 
