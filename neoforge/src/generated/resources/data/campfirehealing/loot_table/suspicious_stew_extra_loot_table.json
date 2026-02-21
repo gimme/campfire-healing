@@ -6,95 +6,55 @@
       "entries": [
         {
           "type": "minecraft:empty",
-          "weight": 80
+          "weight": 10
         },
         {
           "type": "minecraft:item",
           "functions": [
             {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            },
-            {
-              "components": {
-                "minecraft:suspicious_stew_effects": [
-                  {
-                    "duration": 220,
-                    "id": "minecraft:blindness"
+              "effects": [
+                {
+                  "type": "minecraft:blindness",
+                  "duration": {
+                    "type": "minecraft:uniform",
+                    "max": 45.0,
+                    "min": 5.0
                   }
-                ]
-              },
-              "function": "minecraft:set_components"
+                },
+                {
+                  "type": "minecraft:nausea",
+                  "duration": {
+                    "type": "minecraft:uniform",
+                    "max": 90.0,
+                    "min": 5.0
+                  }
+                },
+                {
+                  "type": "minecraft:saturation",
+                  "duration": 0.35
+                }
+              ],
+              "function": "minecraft:set_stew_effect"
             }
           ],
           "name": "minecraft:suspicious_stew",
-          "weight": 3
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "functions": [
             {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            },
-            {
-              "components": {
-                "minecraft:suspicious_stew_effects": [
-                  {
-                    "duration": 7,
-                    "id": "minecraft:saturation"
+              "effects": [
+                {
+                  "type": "minecraft:poison",
+                  "duration": {
+                    "type": "minecraft:binomial",
+                    "n": 63.0,
+                    "p": 0.1
                   }
-                ]
-              },
-              "function": "minecraft:set_components"
-            }
-          ],
-          "name": "minecraft:suspicious_stew",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
-          "functions": [
-            {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            },
-            {
-              "components": {
-                "minecraft:suspicious_stew_effects": [
-                  {
-                    "duration": 140,
-                    "id": "minecraft:nausea"
-                  }
-                ]
-              },
-              "function": "minecraft:set_components"
-            }
-          ],
-          "name": "minecraft:suspicious_stew",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
-          "functions": [
-            {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            },
-            {
-              "components": {
-                "minecraft:suspicious_stew_effects": [
-                  {
-                    "duration": 220,
-                    "id": "minecraft:poison"
-                  }
-                ]
-              },
-              "function": "minecraft:set_components"
+                }
+              ],
+              "function": "minecraft:set_stew_effect"
             }
           ],
           "name": "minecraft:suspicious_stew"
@@ -103,31 +63,24 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            },
-            {
-              "components": {
-                "minecraft:suspicious_stew_effects": [
-                  {
-                    "duration": 140,
-                    "id": "minecraft:regeneration"
+              "effects": [
+                {
+                  "type": "minecraft:regeneration",
+                  "duration": {
+                    "type": "minecraft:uniform",
+                    "max": 17.49,
+                    "min": 2.5
                   }
-                ]
-              },
-              "function": "minecraft:set_components"
+                }
+              ],
+              "function": "minecraft:set_stew_effect"
             }
           ],
           "name": "minecraft:suspicious_stew",
-          "weight": 10
+          "weight": 3
         }
       ],
-      "rolls": {
-        "type": "minecraft:uniform",
-        "max": 4.0,
-        "min": 2.0
-      }
+      "rolls": 1.0
     }
   ],
   "random_sequence": "campfirehealing:suspicious_stew_extra_loot_table"

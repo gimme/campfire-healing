@@ -179,6 +179,12 @@ public class NightServerConfig extends ServerConfig {
             For example, 0.67 means the player deals 67% of their normal damage (a 33% reduction).""")
         .define("infested.damageMultiplier", 0.67);
 
+    private static final ConfigValue<Boolean> EXTRA_LOOT_ENABLED = SPEC.variable()
+        .comment("""
+            When true, the mod injects extra loot pools with healing-related items (e.g. Potions, Apples and Suspicious Stews)
+            into structure chest loot tables. Setting this to false disables these custom additions.""")
+        .define("loot.extraLootEnabled", true);
+
     @Override
     public float getNaturalRegenSpeedMultiplier() {
         return NATURAL_REGEN_SPEED_MULTIPLIER.get().floatValue();
@@ -380,5 +386,10 @@ public class NightServerConfig extends ServerConfig {
     @Override
     public float getInfestedDamageMultiplier() {
         return INFESTED_DAMAGE_MULTIPLIER.get().floatValue();
+    }
+
+    @Override
+    public boolean isExtraLootEnabled() {
+        return EXTRA_LOOT_ENABLED.get();
     }
 }

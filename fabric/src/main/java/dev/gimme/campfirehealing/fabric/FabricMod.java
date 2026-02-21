@@ -18,9 +18,11 @@ public class FabricMod implements ModInitializer {
 
         // Modify loot tables
         LootTableEvents.MODIFY.register((resourceKey, builder, lootTableSource, provider) -> {
-            ModLootConfig.EXTRA_LOOT_POOLS.stream()
-                .filter(extraPool -> extraPool.tablesToModify().contains(resourceKey))
-                .forEach(extraPool -> builder.withPool(extraPool.content()));
+            if (Main.INSTANCE.getServerConfig().isExtraLootEnabled()) {
+                ModLootConfig.EXTRA_LOOT_POOLS.stream()
+                    .filter(extraPool -> extraPool.tablesToModify().contains(resourceKey))
+                    .forEach(extraPool -> builder.withPool(extraPool.content()));
+            }
         });
     }
 }

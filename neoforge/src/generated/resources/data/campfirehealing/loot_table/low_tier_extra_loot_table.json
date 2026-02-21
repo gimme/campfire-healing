@@ -21,22 +21,8 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "minecraft:apple"
-        },
-        {
-          "type": "minecraft:item",
-          "functions": [
-            {
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "max": 2.0,
-                "min": 1.0
-              },
-              "function": "minecraft:set_count"
-            }
-          ],
-          "name": "minecraft:oxeye_daisy"
+          "name": "minecraft:apple",
+          "weight": 4
         },
         {
           "type": "minecraft:item",
@@ -51,7 +37,8 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "minecraft:red_mushroom"
+          "name": "minecraft:red_mushroom",
+          "weight": 3
         },
         {
           "type": "minecraft:item",
@@ -66,14 +53,30 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "minecraft:brown_mushroom"
+          "name": "minecraft:brown_mushroom",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            },
+            {
+              "components": {
+                "minecraft:potion_contents": {
+                  "potion": "minecraft:healing"
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "minecraft:potion"
         }
       ],
-      "rolls": {
-        "type": "minecraft:uniform",
-        "max": 4.0,
-        "min": 2.0
-      }
+      "rolls": 1.0
     }
   ],
   "random_sequence": "campfirehealing:low_tier_extra_loot_table"

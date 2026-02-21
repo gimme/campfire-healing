@@ -6,17 +6,16 @@
       "terms": [
         {
           "condition": "neoforge:loot_table_id",
-          "loot_table_id": "minecraft:chests/simple_dungeon"
+          "loot_table_id": "minecraft:chests/bastion_treasure"
         },
         {
           "condition": "neoforge:loot_table_id",
           "loot_table_id": "minecraft:chests/buried_treasure"
-        },
-        {
-          "condition": "neoforge:loot_table_id",
-          "loot_table_id": "minecraft:chests/bastion_treasure"
         }
       ]
+    },
+    {
+      "condition": "campfirehealing:config"
     }
   ],
   "table": "campfirehealing:high_tier_extra_loot_table"

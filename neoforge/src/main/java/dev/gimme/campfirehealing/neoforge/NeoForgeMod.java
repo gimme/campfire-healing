@@ -3,6 +3,7 @@ package dev.gimme.campfirehealing.neoforge;
 import dev.gimme.campfirehealing.domain.Constants;
 import dev.gimme.campfirehealing.Main;
 import dev.gimme.campfirehealing.neoforge.loot.LootProviders;
+import dev.gimme.campfirehealing.neoforge.loot.ModLootConditionTypes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -16,6 +17,7 @@ public class NeoForgeMod {
     public NeoForgeMod(IEventBus modBus) {
         Main.init(FMLPaths.CONFIGDIR.get());
         NeoForge.EVENT_BUS.register(this);
+        ModLootConditionTypes.REGISTRY.register(modBus);
         modBus.register(new LootProviders());
     }
 

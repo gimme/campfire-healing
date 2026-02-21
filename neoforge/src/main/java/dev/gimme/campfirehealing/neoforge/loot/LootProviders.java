@@ -49,7 +49,7 @@ public class LootProviders {
                 ModLootConfig.EXTRA_LOOT_POOLS.forEach(extraPool -> this.add(
                     extraPool.name() + "_loot_table_modifier",
                     new AddTableLootModifier(
-                        new LootItemCondition[]{createLootTableIdCondition(extraPool)},
+                        new LootItemCondition[]{createLootTableIdCondition(extraPool), ConfigCondition.INSTANCE},
                         getLootTableKey(extraPool)
                     )
                 ));

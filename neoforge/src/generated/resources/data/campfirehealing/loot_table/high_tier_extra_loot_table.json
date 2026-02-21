@@ -5,10 +5,6 @@
       "bonus_rolls": 0.0,
       "entries": [
         {
-          "type": "minecraft:empty",
-          "weight": 50
-        },
-        {
           "type": "minecraft:item",
           "functions": [
             {
@@ -17,31 +13,24 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "minecraft:golden_apple",
-          "weight": 10
+          "name": "minecraft:apple",
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "functions": [
             {
               "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            },
-            {
-              "components": {
-                "minecraft:suspicious_stew_effects": [
-                  {
-                    "duration": 140,
-                    "id": "minecraft:regeneration"
-                  }
-                ]
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 2.0
               },
-              "function": "minecraft:set_components"
+              "function": "minecraft:set_count"
             }
           ],
-          "name": "minecraft:suspicious_stew",
-          "weight": 10
+          "name": "minecraft:apple",
+          "weight": 4
         },
         {
           "type": "minecraft:item",
@@ -61,7 +50,7 @@
             }
           ],
           "name": "minecraft:potion",
-          "weight": 6
+          "weight": 5
         },
         {
           "type": "minecraft:item",
@@ -80,7 +69,8 @@
               "function": "minecraft:set_components"
             }
           ],
-          "name": "minecraft:potion"
+          "name": "minecraft:potion",
+          "weight": 2
         },
         {
           "type": "minecraft:item",
@@ -122,6 +112,22 @@
           "name": "minecraft:splash_potion"
         },
         {
+          "type": "minecraft:empty",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:golden_apple",
+          "weight": 5
+        },
+        {
           "type": "minecraft:item",
           "functions": [
             {
@@ -146,11 +152,7 @@
           "weight": 2
         }
       ],
-      "rolls": {
-        "type": "minecraft:uniform",
-        "max": 5.0,
-        "min": 3.0
-      }
+      "rolls": 2.0
     }
   ],
   "random_sequence": "campfirehealing:high_tier_extra_loot_table"

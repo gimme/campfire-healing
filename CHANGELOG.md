@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Smoother saturated healing logic
 - Ability to use items as fuel for Soul Campfires
 - Added thematic Soulfire sounds
+- Added healing-related items to various loot tables
 
 ### Changed
 

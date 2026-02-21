@@ -6,7 +6,7 @@
       "terms": [
         {
           "condition": "neoforge:loot_table_id",
-          "loot_table_id": "minecraft:chests/bastion_hoglin_stable"
+          "loot_table_id": "minecraft:chests/bastion_bridge"
         },
         {
           "condition": "neoforge:loot_table_id",
@@ -14,21 +14,20 @@
         },
         {
           "condition": "neoforge:loot_table_id",
-          "loot_table_id": "minecraft:chests/nether_bridge"
-        },
-        {
-          "condition": "neoforge:loot_table_id",
           "loot_table_id": "minecraft:chests/ruined_portal"
         },
         {
           "condition": "neoforge:loot_table_id",
-          "loot_table_id": "minecraft:chests/bastion_bridge"
+          "loot_table_id": "minecraft:chests/bastion_hoglin_stable"
         },
         {
           "condition": "neoforge:loot_table_id",
-          "loot_table_id": "minecraft:chests/bastion_treasure"
+          "loot_table_id": "minecraft:chests/nether_bridge"
         }
       ]
+    },
+    {
+      "condition": "campfirehealing:config"
     }
   ],
   "table": "campfirehealing:nether_extra_loot_table"
