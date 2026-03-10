@@ -99,7 +99,7 @@ public class NightServerConfig extends ServerConfig {
         .comment("""
             Multiplier for the amount of exhaustion applied by Soul Campfire compared to Campfire.
             For example, setting this to 2.0 makes Soul Campfire apply double the exhaustion per tick.""")
-        .define("soulfire.exhaustionMultiplier", 2.0);
+        .define("soulfire.exhaustionMultiplier", 1.5);
 
     private static final ConfigValue<Number> SOULFIRE_MAX_HEAL_TO_PERCENTAGE = SPEC.variable()
         .comment("""
