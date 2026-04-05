@@ -126,8 +126,8 @@ public class NightServerConfig extends ServerConfig {
             The item can be specified as a regex matching the item with or without namespace (e.g. "minecraft:rotten_flesh").
             A duration of -1 means infinite.
             Format: "item,seconds"
-            Example: ["rotten_flesh,60", "bone,15", "ender_pearl,15", "blaze_rod,15", "ghast_tear,300", "magma_cream,5"]""")
-        .define("soulfire.fuel", List.of("rotten_flesh,60"));
+            Example: ["rotten_flesh,45", "bone,15", "ender_pearl,15", "blaze_rod,15", "ghast_tear,300", "magma_cream,5"]""")
+        .define("soulfire.fuel", List.of("rotten_flesh,45"));
 
     private static final ConfigValue<Boolean> SOULFIRE_LIT_BY_FUEL = SPEC.variable()
         .comment("""
