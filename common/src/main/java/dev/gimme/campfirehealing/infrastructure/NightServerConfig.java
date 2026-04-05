@@ -75,6 +75,13 @@ public class NightServerConfig extends ServerConfig {
         .comment("Number of players required to be near the same Campfire to activate regeneration.")
         .define("campfire.requiredPlayers", 1);
 
+    private static final ConfigValue<Boolean> CAMPFIRE_BLOCK_BED_RESPAWN = SPEC.variable()
+        .comment("""
+            If true, beds placed at Y-levels where Campfire regeneration is blocked will not work as respawn points.
+            This prevents players from abusing intentional deaths to respawn at full health in areas where
+            Campfire healing is restricted by the Y-level settings.""")
+        .define("campfire.blockBedRespawnBelowMinY", true);
+
     private static final ConfigValue<Number> CAMPFIRE_MIN_Y_OVERWORLD = SPEC.variable()
         .comment("""
             The minimum Y-level a Campfire must be placed at to provide regeneration in the Overworld.
@@ -391,5 +398,10 @@ public class NightServerConfig extends ServerConfig {
     @Override
     public boolean isExtraLootEnabled() {
         return EXTRA_LOOT_ENABLED.get();
+    }
+
+    @Override
+    public boolean isBlockBedRespawnBelowMinY() {
+        return CAMPFIRE_BLOCK_BED_RESPAWN.get();
     }
 }

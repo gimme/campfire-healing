@@ -26,9 +26,7 @@ public class CampfirePassiveRegenBehavior {
      */
     public static void tickCampfireRegen(ServerLevel level, CampfireBlockEntity campfire) {
         if (Main.INSTANCE.getServerConfig().getCampfireHealAmount(campfire) <= 0) return;
-        var yLevel = campfire.getBlockPos().getY();
-        if (yLevel < Main.INSTANCE.getServerConfig().getCampfireMinYLevel(campfire)) return;
-        if (yLevel > Main.INSTANCE.getServerConfig().getCampfireMaxYLevel(campfire)) return;
+        if (Main.INSTANCE.getServerConfig().isCampfireBlockedAtYLevel(campfire)) return;
 
         var tickTimer = campfireTickTimers.computeIfAbsent(campfire, k -> new TickTimer());
 

@@ -1,7 +1,7 @@
 package dev.gimme.campfirehealing.domain;
 
-import dev.gimme.campfirehealing.Main;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
@@ -45,6 +45,8 @@ public abstract class ServerConfig {
 
     public abstract boolean isExtraLootEnabled();
 
+    public abstract boolean isBlockBedRespawnBelowMinY();
+
     public float getCampfireHealAmount(CampfireBlockEntity campfire) {
         var healAmount = getCampfireHealAmount();
         if (campfire.getBlockState().is(Blocks.SOUL_CAMPFIRE)) {
@@ -70,25 +72,22 @@ public abstract class ServerConfig {
     }
 
     public int getCampfireMinYLevel(CampfireBlockEntity campfire) {
-        var level = campfire.getLevel();
+        boolean isSoulfire = campfire.getBlockState().is(Blocks.SOUL_CAMPFIRE);
+        return getMinYLevelForDimension(campfire.getLevel(), isSoulfire);
+    }
+
+    public boolean isCampfireBlockedAtYLevel(CampfireBlockEntity campfire) {
+        int yLevel = campfire.getBlockPos().getY();
+        return yLevel < getCampfireMinYLevel(campfire) || yLevel > getCampfireMaxYLevel(campfire);
+    }
+
+    public int getMinYLevelForDimension(Level level, boolean isSoulfire) {
         if (level.dimensionType().skybox() == DimensionType.Skybox.OVERWORLD) {
-            if (campfire.getBlockState().is(Blocks.SOUL_CAMPFIRE)) {
-                return Main.INSTANCE.getServerConfig().getSoulfireMinYLevelOverworld();
-            } else {
-                return Main.INSTANCE.getServerConfig().getCampfireMinYLevelOverworld();
-            }
+            return isSoulfire ? getSoulfireMinYLevelOverworld() : getCampfireMinYLevelOverworld();
         } else if (level.dimensionTypeRegistration().is(BuiltinDimensionTypes.NETHER)) {
-            if (campfire.getBlockState().is(Blocks.SOUL_CAMPFIRE)) {
-                return Main.INSTANCE.getServerConfig().getSoulfireMinYLevelNether();
-            } else {
-                return Main.INSTANCE.getServerConfig().getCampfireMinYLevelNether();
-            }
+            return isSoulfire ? getSoulfireMinYLevelNether() : getCampfireMinYLevelNether();
         } else {
-            if (campfire.getBlockState().is(Blocks.SOUL_CAMPFIRE)) {
-                return Main.INSTANCE.getServerConfig().getSoulfireMinYLevelOther();
-            } else {
-                return Main.INSTANCE.getServerConfig().getCampfireMinYLevelOther();
-            }
+            return isSoulfire ? getSoulfireMinYLevelOther() : getCampfireMinYLevelOther();
         }
     }
 
@@ -96,7 +95,7 @@ public abstract class ServerConfig {
         var level = campfire.getLevel();
         if (level.dimensionTypeRegistration().is(BuiltinDimensionTypes.NETHER)) {
             if (campfire.getBlockState().is(Blocks.SOUL_CAMPFIRE)) {
-                return Main.INSTANCE.getServerConfig().getSoulfireMaxYLevelNether();
+                return getSoulfireMaxYLevelNether();
             }
         }
         return Integer.MAX_VALUE;

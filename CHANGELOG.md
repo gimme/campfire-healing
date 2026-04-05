@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Bed respawn is now blocked when the bed is below the campfire minimum Y-level
+
 ### Changed
 
 - Updated to Minecraft 26.1

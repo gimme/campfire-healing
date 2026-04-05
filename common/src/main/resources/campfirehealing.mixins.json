@@ -4,6 +4,7 @@
   "package": "dev.gimme.campfirehealing.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "campfire.BedRespawnMixin",
     "campfire.CampfireMixin",
     "infested.InfestedMixin",
     "infested.LivingEntityDamageMixin",
