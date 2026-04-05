@@ -7,10 +7,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -58,7 +61,7 @@ public class SoulCampfireMixin {
         var itemStack = input.getItem(0);
 
         if (SoulfireBehavior.isSoulFuel(campfire, itemStack, level)) {
-            var recipe = new CampfireCookingRecipe("", CookingBookCategory.MISC, Ingredient.of(Items.DIRT), new ItemStack(Items.DIRT), 0, 1);
+            var recipe = new CampfireCookingRecipe(new Recipe.CommonInfo(false), new AbstractCookingRecipe.CookingBookInfo(CookingBookCategory.MISC, ""), Ingredient.of(Items.DIRT), new ItemStackTemplate(Items.DIRT), 0, 1);
             return Optional.of(new RecipeHolder<>(null, recipe));
         }
 

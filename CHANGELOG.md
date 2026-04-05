@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Updated to Minecraft 26.1
 - Updated default configuration values
 
 ## [v1.21.11-0.1.2] - 2026-02-21
