@@ -3,13 +3,14 @@
 Replaces natural regeneration with Campfire healing to make survival more challenging and rewarding.
 
 ## Features
-- **Disabled Natural Regeneration**: Natural regeneration is disabled by default, making health a precious resource.
-- **Campfire Healing**: Campfires heal players within a small radius when placed above sea level in the Overworld.
-- **Food Drain**: By default, Campfire healing works just like natural regeneration, draining food and healing faster when saturated.
-- **Soul Campfires**: Soul Campfires work anywhere, but come with a cost. They require Rotten Flesh as fuel, drain food faster, and cause you to be "infested" with parasites.
-- **Infested Effect**: The `Infested` (vanilla) effect reduces your damage dealt by 33%, but ends when the Silverfish parasites come out.
-- **Configuration**: Highly configurable! You can tweak pretty much any aspect of the mod, from healing rates to fuel types and more.
-- **Loot**: Healing-related items (e.g., potions, apples and stews) are added to various loot tables, making them more accessible and rewarding to find.
+- **Disabled Natural Regeneration:** Natural regeneration is disabled by default, making health a precious resource.
+- **Campfire Healing:** Campfires heal players within a small radius when placed above sea level in the Overworld.
+- **Food Drain:** By default, Campfire healing works just like natural regeneration, draining food and healing faster when saturated.
+- **Bed Restriction:** You can't set your respawn point below where campfires heal.
+- **Soul Campfires:** Soul Campfires work anywhere, but come with a cost. They require Rotten Flesh as fuel, drain food faster, and cause you to be "infested" with parasites.
+- **Infested Effect:** The `Infested` (vanilla) effect reduces your damage dealt by 33%, but ends when the Silverfish parasites come out.
+- **Configuration:** Highly configurable! You can tweak pretty much any aspect of the mod, from healing rates to fuel types and more.
+- **Loot:** Healing-related items (e.g., potions, apples and stews) are added to various loot tables, making them more accessible and rewarding to find.
 
 ## The Design Philosophy
 The intent of this mod is to make the game harder and make Campfires more useful. 
