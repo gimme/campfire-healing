@@ -47,6 +47,8 @@ public abstract class ServerConfig {
 
     public abstract boolean isBlockBedRespawnBelowMinY();
 
+    public abstract int getFlowerMaxStackSize();
+
     public float getCampfireHealAmount(CampfireBlockEntity campfire) {
         var healAmount = getCampfireHealAmount();
         if (campfire.getBlockState().is(Blocks.SOUL_CAMPFIRE)) {

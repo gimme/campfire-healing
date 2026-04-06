@@ -7,6 +7,7 @@
     "campfire.BedRespawnMixin",
     "campfire.CampfireMixin",
     "infested.InfestedMixin",
+    "items.FlowerStackSizeMixin",
     "infested.LivingEntityDamageMixin",
     "infested.MilkMixin",
     "natural.FoodHealingMixin",

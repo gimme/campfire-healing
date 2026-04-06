@@ -186,6 +186,13 @@ public class NightServerConfig extends ServerConfig {
             For example, 0.67 means the player deals 67% of their normal damage (a 33% reduction).""")
         .define("infested.damageMultiplier", 0.67);
 
+    private static final ConfigValue<Number> FLOWER_MAX_STACK_SIZE = SPEC.variable()
+        .comment("""
+            Maximum stack size for flower items. This limits how many flowers players can carry at once,
+            making it harder to mass-produce Suspicious Stew for healing.
+            Set to -1 to use the vanilla stack size (64).""")
+        .define("items.flowerMaxStackSize", 1);
+
     private static final ConfigValue<Boolean> EXTRA_LOOT_ENABLED = SPEC.variable()
         .comment("""
             When true, the mod injects extra loot pools with healing-related items (e.g. Potions, Apples and Suspicious Stews)
@@ -393,6 +400,11 @@ public class NightServerConfig extends ServerConfig {
     @Override
     public float getInfestedDamageMultiplier() {
         return INFESTED_DAMAGE_MULTIPLIER.get().floatValue();
+    }
+
+    @Override
+    public int getFlowerMaxStackSize() {
+        return FLOWER_MAX_STACK_SIZE.get().intValue();
     }
 
     @Override
