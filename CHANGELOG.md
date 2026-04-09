@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v26.1-0.1.5] - 2026-04-09
+
+### Added
+
+- Added nausea to the default soul campfire healing effects
+
+### Changed
+
+- Narrowed stack size limit from all flowers to Oxeye Daisies only
+
 ## [v26.1-0.1.4] - 2026-04-06
 
 ### Added
