@@ -141,7 +141,7 @@ public class NightServerConfig extends ServerConfig {
             A duration of -1 means infinite.
             Format: "effect,seconds[0],level[1]"
             Example: ["hunger", "darkness,1", "nausea,4", "weakness,1,255", "infested,-1", "weakness,-1", "slowness,-1", "mining_fatigue,-1"]""")
-        .define("soulfire.healingEffects", List.of("hunger", "darkness,1", "weakness,1,255", "infested,-1"));
+        .define("soulfire.healingEffects", List.of("hunger", "nausea,1", "darkness,1", "weakness,1,255", "infested,-1"));
 
     private static final ConfigValue<Number> SOULFIRE_MIN_Y_OVERWORLD = SPEC.variable()
         .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in the Overworld.")
@@ -186,12 +186,12 @@ public class NightServerConfig extends ServerConfig {
             For example, 0.67 means the player deals 67% of their normal damage (a 33% reduction).""")
         .define("infested.damageMultiplier", 0.67);
 
-    private static final ConfigValue<Number> FLOWER_MAX_STACK_SIZE = SPEC.variable()
+    private static final ConfigValue<Number> OXEYE_DAISY_MAX_STACK_SIZE = SPEC.variable()
         .comment("""
-            Maximum stack size for flower items. This limits how many flowers players can carry at once,
-            making it harder to mass-produce Suspicious Stew for healing.
+            Maximum stack size for Oxeye Daisies. This limits how many Oxeye Daisies players can carry at once,
+            making it harder to mass-produce Suspicious Stew (Regeneration) for healing.
             Set to -1 to use the vanilla stack size (64).""")
-        .define("items.flowerMaxStackSize", 1);
+        .define("items.oxeyeDaisyMaxStackSize", 1);
 
     private static final ConfigValue<Boolean> EXTRA_LOOT_ENABLED = SPEC.variable()
         .comment("""
@@ -403,8 +403,8 @@ public class NightServerConfig extends ServerConfig {
     }
 
     @Override
-    public int getFlowerMaxStackSize() {
-        return FLOWER_MAX_STACK_SIZE.get().intValue();
+    public int getOxeyeDaisyMaxStackSize() {
+        return OXEYE_DAISY_MAX_STACK_SIZE.get().intValue();
     }
 
     @Override
