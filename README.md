@@ -10,7 +10,7 @@ Replaces natural regeneration with Campfire healing to make survival more challe
 - **Soul Campfires:** Soul Campfires work anywhere, but come with a cost. They require Rotten Flesh as fuel, drain food faster, and cause you to be "infested" with parasites.
 - **Infested Effect:** The `Infested` (vanilla) effect reduces your damage dealt by 33%, but ends when the Silverfish parasites come out.
 - **Configuration:** Highly configurable! You can tweak pretty much any aspect of the mod, from healing rates to fuel types and more.
-- **Flower Stack Limit:** Flowers are limited to a stack size of 1 by default, preventing players from stockpiling Suspicious Stew ingredients for easy healing.
+- **Oxeye Daisy Stack Limit:** Oxeye Daisies are limited to a stack size of 1 by default, preventing players from stockpiling Suspicious Stew (Regeneration) ingredients for easy healing.
 - **Loot:** Healing-related items (e.g., potions, apples and stews) are added to various loot tables, making them more accessible and rewarding to find.
 
 ## The Design Philosophy

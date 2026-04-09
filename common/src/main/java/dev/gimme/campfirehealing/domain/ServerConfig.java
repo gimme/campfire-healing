@@ -47,7 +47,7 @@ public abstract class ServerConfig {
 
     public abstract boolean isBlockBedRespawnBelowMinY();
 
-    public abstract int getFlowerMaxStackSize();
+    public abstract int getOxeyeDaisyMaxStackSize();
 
     public float getCampfireHealAmount(CampfireBlockEntity campfire) {
         var healAmount = getCampfireHealAmount();
