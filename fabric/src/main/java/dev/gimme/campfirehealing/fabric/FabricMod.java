@@ -16,10 +16,10 @@ public class FabricMod implements ModInitializer {
     public void onInitialize() {
         ConfigRegistry.INSTANCE.register(Constants.MOD_ID, ModConfig.Type.COMMON, FcapServerConfig.SPEC, FcapServerConfig.FILE_NAME);
 
-        var main = Main.init();
+        Main.init();
 
         // Register server tick event
-        ServerTickEvents.END_SERVER_TICK.register(tickServer -> main.getServerHandler().onServerTick(tickServer));
+        ServerTickEvents.END_SERVER_TICK.register(tickServer -> Main.INSTANCE.getServerHandler().onServerTick(tickServer));
 
         // Modify loot tables
         LootTableEvents.MODIFY.register((resourceKey, builder, lootTableSource, provider) -> {
