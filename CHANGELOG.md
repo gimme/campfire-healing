@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Simplified the default Soul Campfire healing to the Hunger effect only; the Infested "curse" (along with nausea, darkness, and weakness) is now opt-in via `soulfire.healingEffects` instead of being enabled by default
+
 ## [v26.1-0.1.5] - 2026-04-09
 
 ### Added

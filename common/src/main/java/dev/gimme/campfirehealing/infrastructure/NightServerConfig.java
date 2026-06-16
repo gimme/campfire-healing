@@ -139,9 +139,10 @@ public class NightServerConfig extends ServerConfig {
         .comment("""
             List of effects players get when they heal from a Soul Campfire.
             A duration of -1 means infinite.
+            Adding "infested" enables a thematic parasite curse — see the infested.* options below.
             Format: "effect,seconds[0],level[1]"
-            Example: ["hunger", "darkness,1", "nausea,4", "weakness,1,255", "infested,-1", "weakness,-1", "slowness,-1", "mining_fatigue,-1"]""")
-        .define("soulfire.healingEffects", List.of("hunger", "nausea,1", "darkness,1", "weakness,1,255", "infested,-1"));
+            Example: ["hunger", "darkness,1", "nausea,1", "weakness,1,255", "infested,-1"]""")
+        .define("soulfire.healingEffects", List.of("hunger"));
 
     private static final ConfigValue<Number> SOULFIRE_MIN_Y_OVERWORLD = SPEC.variable()
         .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in the Overworld.")
@@ -163,10 +164,14 @@ public class NightServerConfig extends ServerConfig {
 
     private static final ConfigValue<Boolean> INFESTED_ENDS_WHEN_SILVERFISH_COME_OUT = SPEC.variable()
         .comment("""
+            "Infested" is an optional, thematic curse for Soul Campfire healing, and is OFF by default.
+            To enable it, add "infested" to soulfire.healingEffects (e.g. "infested,-1" for an effect that lasts
+            until the parasites come out). While Infested, a player deals reduced damage (see infested.damageMultiplier)
+            and carries Silverfish that burst out and attack when the player takes damage.
+            The infested.* options only have an effect while a player is actually Infested.
+
             If true, when Silverfish spawn from an Infested player, the Infested effect and all other effects that have the same
-            duration will be cleared from the player.
-            This is a thematic feature that allows you to, for example, apply an infinite Infested effect (combined with
-            any other negative/positive effects) that only ends when the Silverfish that "infest" you actually come out.""")
+            duration will be cleared from the player.""")
         .define("infested.endsWhenTriggered", true);
 
     private static final ConfigValue<Boolean> MILK_CURES_INFESTED = SPEC.variable()
