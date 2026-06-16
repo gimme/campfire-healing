@@ -2,8 +2,9 @@ package dev.gimme.campfirehealing.infrastructure;
 
 import dev.gimme.campfirehealing.domain.Constants;
 import dev.gimme.campfirehealing.domain.ServerConfig;
-import dev.gimme.config.ModConfigSpec;
-import dev.gimme.config.ModConfigSpec.ConfigValue;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
+import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 
@@ -11,11 +12,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class NightServerConfig extends ServerConfig {
+/**
+ * {@link ServerConfig} backed by the NeoForge config system. The spec is defined once here in the common module and
+ * registered per loader (natively on NeoForge, via Forge Config API Port on Fabric) as a {@code COMMON} config.
+ */
+public class FcapServerConfig extends ServerConfig {
 
-    public static final ModConfigSpec SPEC = new ModConfigSpec();
+    public static final String FILE_NAME = Constants.MOD_ID + "-server.toml";
 
-    private static final ConfigValue<Number> NATURAL_REGEN_SPEED_MULTIPLIER = SPEC.variable()
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+
+    private static final ConfigValue<Double> NATURAL_REGEN_SPEED_MULTIPLIER = BUILDER
         .comment("""
             Multiplier for natural health regeneration speed. For example, setting this to 0.1 makes it take 40 seconds
             per half heart instead of 4 seconds. Setting this to 0 disables natural regeneration entirely.
@@ -23,13 +30,13 @@ public class NightServerConfig extends ServerConfig {
              Vanilla: -1""")
         .define("naturalRegen.speedMultiplier", 0.0);
 
-    private static final ConfigValue<Number> NATURAL_REGEN_MAX_HEAL_TO_PERCENTAGE = SPEC.variable()
+    private static final ConfigValue<Double> NATURAL_REGEN_MAX_HEAL_TO_PERCENTAGE = BUILDER
         .comment("""
             Maximum health percentage (0.0–1.0) up to which natural regeneration can heal players.
             For example, setting this to 0.5 means players will only be healed by natural regeneration up to 5 hearts.""")
         .define("naturalRegen.maxHealToPercentage", 1.0);
 
-    private static final ConfigValue<Number> CAMPFIRE_HEAL_AMOUNT = SPEC.variable()
+    private static final ConfigValue<Double> CAMPFIRE_HEAL_AMOUNT = BUILDER
         .comment("""
             Amount of health restored to each player when Campfire regeneration triggers.
             For reference, natural regeneration in vanilla heals 1 (half heart) every 4 seconds (or every 0.5 seconds
@@ -37,132 +44,132 @@ public class NightServerConfig extends ServerConfig {
             Set to 0 to disable Campfire regeneration entirely.""")
         .define("campfire.healAmount", 0.125);
 
-    private static final ConfigValue<Number> CAMPFIRE_EXHAUSTION = SPEC.variable()
+    private static final ConfigValue<Double> CAMPFIRE_EXHAUSTION = BUILDER
         .comment("""
             Amount of flat exhaustion applied to players when they receive a heal from Campfire regeneration.
             For reference, natural regeneration in vanilla applies 6.0 exhaustion per 1 (half heart) healed.
             If this is above 0, players will only heal if they have foodLevel >= 18.""")
         .define("campfire.exhaustion", 0.75);
 
-    private static final ConfigValue<Number> CAMPFIRE_INTERVAL_SECONDS = SPEC.variable()
+    private static final ConfigValue<Double> CAMPFIRE_INTERVAL_SECONDS = BUILDER
         .comment("Seconds between each heal tick when Campfire regeneration is active.")
         .define("campfire.healIntervalSeconds", 0.5);
 
-    private static final ConfigValue<Number> CAMPFIRE_SATURATION_HEAL_MULTIPLIER = SPEC.variable()
+    private static final ConfigValue<Double> CAMPFIRE_SATURATION_HEAL_MULTIPLIER = BUILDER
         .comment("""
             Multiplier for Campfire heal amount when the player is saturated.
             For reference, natural regeneration in vanilla heals 8 times faster when the player is fully saturated.
             Set to 1.0 to make Campfires heal at the same rate regardless of saturation.""")
         .define("campfire.saturationHealMultiplier", 8.0);
 
-    private static final ConfigValue<Number> CAMPFIRE_RANGE_CONFIG = SPEC.variable()
+    private static final ConfigValue<Double> CAMPFIRE_RANGE_CONFIG = BUILDER
         .comment("Range (in blocks) around the Campfire within which players must be present to activate the effect.")
         .define("campfire.range", 3.0);
 
-    private static final ConfigValue<Number> CAMPFIRE_MAX_HEAL_TO_PERCENTAGE = SPEC.variable()
+    private static final ConfigValue<Double> CAMPFIRE_MAX_HEAL_TO_PERCENTAGE = BUILDER
         .comment("""
             Maximum health percentage (0.0–1.0) up to which Campfires can heal players.
             For example, setting this to 0.8 means players will only be healed by Campfires up to 8 hearts.""")
         .define("campfire.maxHealToPercentage", 1.0);
 
-    private static final ConfigValue<Number> CAMPFIRE_REQUIRED_FOOD_LEVEL = SPEC.variable()
+    private static final ConfigValue<Long> CAMPFIRE_REQUIRED_FOOD_LEVEL = BUILDER
         .comment("""
             Minimum food level players must have to be healed by Campfire regeneration.
             Natural regeneration in vanilla requires 18.""")
-        .define("campfire.requiredFoodLevel", 18);
+        .define("campfire.requiredFoodLevel", 18L);
 
-    private static final ConfigValue<Number> CAMPFIRE_REQUIRED_PLAYERS = SPEC.variable()
+    private static final ConfigValue<Long> CAMPFIRE_REQUIRED_PLAYERS = BUILDER
         .comment("Number of players required to be near the same Campfire to activate regeneration.")
-        .define("campfire.requiredPlayers", 1);
+        .define("campfire.requiredPlayers", 1L);
 
-    private static final ConfigValue<Boolean> CAMPFIRE_BLOCK_BED_RESPAWN = SPEC.variable()
+    private static final BooleanValue CAMPFIRE_BLOCK_BED_RESPAWN = BUILDER
         .comment("""
             If true, beds placed at Y-levels where Campfire regeneration is blocked will not work as respawn points.
             This prevents players from abusing intentional deaths to respawn at full health in areas where
             Campfire healing is restricted by the Y-level settings.""")
         .define("campfire.blockBedRespawnBelowMinY", true);
 
-    private static final ConfigValue<Number> CAMPFIRE_MIN_Y_OVERWORLD = SPEC.variable()
+    private static final ConfigValue<Long> CAMPFIRE_MIN_Y_OVERWORLD = BUILDER
         .comment("""
             The minimum Y-level a Campfire must be placed at to provide regeneration in the Overworld.
             For reference, sea level is at Y=63, and bottom bedrock is at Y=-64.""")
-        .define("campfire.minYOverworld", 63);
+        .define("campfire.minYOverworld", 63L);
 
-    private static final ConfigValue<Number> CAMPFIRE_MIN_Y_NETHER = SPEC.variable()
+    private static final ConfigValue<Long> CAMPFIRE_MIN_Y_NETHER = BUILDER
         .comment("The minimum Y-level a Campfire must be placed at to provide regeneration in the Nether.")
-        .define("campfire.minYNether", 1000);
+        .define("campfire.minYNether", 1000L);
 
-    private static final ConfigValue<Number> CAMPFIRE_MIN_Y_OTHER = SPEC.variable()
+    private static final ConfigValue<Long> CAMPFIRE_MIN_Y_OTHER = BUILDER
         .comment("The minimum Y-level a Campfire must be placed at to provide regeneration in other dimensions (just affects the End in vanilla).")
-        .define("campfire.minYOther", 1000);
+        .define("campfire.minYOther", 1000L);
 
-    private static final ConfigValue<Number> SOULFIRE_HEAL_MULTIPLIER = SPEC.variable()
+    private static final ConfigValue<Double> SOULFIRE_HEAL_MULTIPLIER = BUILDER
         .comment("""
             Multiplier for the amount of health restored by Soul Campfire compared to Campfire.
             For example, setting this to 0.5 makes Soul Campfire heal half as much per tick.""")
         .define("soulfire.healMultiplier", 0.75);
 
-    private static final ConfigValue<Number> SOULFIRE_EXHAUSTION_MULTIPLIER = SPEC.variable()
+    private static final ConfigValue<Double> SOULFIRE_EXHAUSTION_MULTIPLIER = BUILDER
         .comment("""
             Multiplier for the amount of exhaustion applied by Soul Campfire compared to Campfire.
             For example, setting this to 2.0 makes Soul Campfire apply double the exhaustion per tick.""")
         .define("soulfire.exhaustionMultiplier", 1.5);
 
-    private static final ConfigValue<Number> SOULFIRE_MAX_HEAL_TO_PERCENTAGE = SPEC.variable()
+    private static final ConfigValue<Double> SOULFIRE_MAX_HEAL_TO_PERCENTAGE = BUILDER
         .comment("""
             Maximum health percentage (0.0–1.0) up to which Soul Campfires can heal players.""")
         .define("soulfire.maxHealToPercentage", 1.0);
 
-    private static final ConfigValue<Number> SOULFIRE_REQUIRED_FOOD_LEVEL = SPEC.variable()
+    private static final ConfigValue<Long> SOULFIRE_REQUIRED_FOOD_LEVEL = BUILDER
         .comment("""
             Minimum food level players must have to be healed by Soul Campfire regeneration.
             Setting this to 1 allows it to starve you out completely.
             Setting this to 0 allows it to keep healing you even when starving.""")
-        .define("soulfire.requiredFoodLevel", 1);
+        .define("soulfire.requiredFoodLevel", 1L);
 
-    private static final ConfigValue<List<String>> SOULFIRE_FUEL = SPEC.variable()
+    private static final ConfigValue<List<? extends String>> SOULFIRE_FUEL = BUILDER
         .comment("""
             List of items that can be used as fuel for Soul Campfires, along with how many seconds of fuel they provide.
             The item can be specified as a regex matching the item with or without namespace (e.g. "minecraft:rotten_flesh").
             A duration of -1 means infinite.
             Format: "item,seconds"
             Example: ["rotten_flesh,45", "bone,15", "ender_pearl,15", "blaze_rod,15", "ghast_tear,300", "magma_cream,5"]""")
-        .define("soulfire.fuel", List.of("rotten_flesh,45"));
+        .defineList("soulfire.fuel", List.of("rotten_flesh,45"), () -> "", o -> o instanceof String);
 
-    private static final ConfigValue<Boolean> SOULFIRE_LIT_BY_FUEL = SPEC.variable()
+    private static final BooleanValue SOULFIRE_LIT_BY_FUEL = BUILDER
         .comment("""
             If true, Soul Campfires will only be lit when you put fuel in them.
             This is for visual purposes, but a consequence is that you then also need fuel to cook normal food on them.""")
         .define("soulfire.litByFuel", true);
 
-    private static final ConfigValue<List<String>> SOULFIRE_HEALING_EFFECTS = SPEC.variable()
+    private static final ConfigValue<List<? extends String>> SOULFIRE_HEALING_EFFECTS = BUILDER
         .comment("""
             List of effects players get when they heal from a Soul Campfire.
             A duration of -1 means infinite.
             Adding "infested" enables a thematic parasite curse — see the infested.* options below.
             Format: "effect,seconds[0],level[1]"
             Example: ["hunger", "darkness,1", "nausea,1", "weakness,1,255", "infested,-1"]""")
-        .define("soulfire.healingEffects", List.of("hunger"));
+        .defineList("soulfire.healingEffects", List.of("hunger"), () -> "", o -> o instanceof String);
 
-    private static final ConfigValue<Number> SOULFIRE_MIN_Y_OVERWORLD = SPEC.variable()
+    private static final ConfigValue<Long> SOULFIRE_MIN_Y_OVERWORLD = BUILDER
         .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in the Overworld.")
-        .define("soulfire.minYOverworld", -1000);
+        .define("soulfire.minYOverworld", -1000L);
 
-    private static final ConfigValue<Number> SOULFIRE_MIN_Y_NETHER = SPEC.variable()
+    private static final ConfigValue<Long> SOULFIRE_MIN_Y_NETHER = BUILDER
         .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in the Nether.")
-        .define("soulfire.minYNether", -1000);
+        .define("soulfire.minYNether", -1000L);
 
-    private static final ConfigValue<Number> SOULFIRE_MIN_Y_OTHER = SPEC.variable()
+    private static final ConfigValue<Long> SOULFIRE_MIN_Y_OTHER = BUILDER
         .comment("The minimum Y-level a Soul Campfire must be placed at to provide regeneration in other dimensions (just affects the End in vanilla).")
-        .define("soulfire.minYOther", -1000);
+        .define("soulfire.minYOther", -1000L);
 
-    private static final ConfigValue<Number> SOULFIRE_MAX_Y_NETHER = SPEC.variable()
+    private static final ConfigValue<Long> SOULFIRE_MAX_Y_NETHER = BUILDER
         .comment("""
             The maximum Y-level a Soul Campfire must be placed at to provide regeneration in the Nether.
             For example, setting this to 31 means that it has to be placed below the lava level.""")
-        .define("soulfire.maxYNether", 1000);
+        .define("soulfire.maxYNether", 1000L);
 
-    private static final ConfigValue<Boolean> INFESTED_ENDS_WHEN_SILVERFISH_COME_OUT = SPEC.variable()
+    private static final BooleanValue INFESTED_ENDS_WHEN_SILVERFISH_COME_OUT = BUILDER
         .comment("""
             "Infested" is an optional, thematic curse for Soul Campfire healing, and is OFF by default.
             To enable it, add "infested" to soulfire.healingEffects (e.g. "infested,-1" for an effect that lasts
@@ -174,35 +181,37 @@ public class NightServerConfig extends ServerConfig {
             duration will be cleared from the player.""")
         .define("infested.endsWhenTriggered", true);
 
-    private static final ConfigValue<Boolean> MILK_CURES_INFESTED = SPEC.variable()
+    private static final BooleanValue MILK_CURES_INFESTED = BUILDER
         .comment("""
             If true, drinking milk will force the Silverfish to spawn out of an "infested" player, curing all associated
             effects in the process. Otherwise, milk will have no effect on the "infested" status.""")
         .define("infested.curedByMilk", true);
 
-    private static final ConfigValue<Boolean> INFESTED_HEARS_MOVING_SOUND = SPEC.variable()
+    private static final BooleanValue INFESTED_HEARS_MOVING_SOUND = BUILDER
         .comment("""
             If true, infested players will hear the sound of Silverfish moving in their head whenever they take damage.""")
         .define("infested.hearsMovingSound", true);
 
-    private static final ConfigValue<Number> INFESTED_DAMAGE_MULTIPLIER = SPEC.variable()
+    private static final ConfigValue<Double> INFESTED_DAMAGE_MULTIPLIER = BUILDER
         .comment("""
             Multiplier for damage dealt when Infested.
             For example, 0.67 means the player deals 67% of their normal damage (a 33% reduction).""")
         .define("infested.damageMultiplier", 0.67);
 
-    private static final ConfigValue<Number> OXEYE_DAISY_MAX_STACK_SIZE = SPEC.variable()
+    private static final ConfigValue<Long> OXEYE_DAISY_MAX_STACK_SIZE = BUILDER
         .comment("""
             Maximum stack size for Oxeye Daisies. This limits how many Oxeye Daisies players can carry at once,
             making it harder to mass-produce Suspicious Stew (Regeneration) for healing.
             Set to -1 to use the vanilla stack size (64).""")
-        .define("items.oxeyeDaisyMaxStackSize", 1);
+        .define("items.oxeyeDaisyMaxStackSize", 1L);
 
-    private static final ConfigValue<Boolean> EXTRA_LOOT_ENABLED = SPEC.variable()
+    private static final BooleanValue EXTRA_LOOT_ENABLED = BUILDER
         .comment("""
             When true, the mod injects extra loot pools with healing-related items (e.g. Potions, Apples and Suspicious Stews)
             into structure chest loot tables. Setting this to false disables these custom additions.""")
         .define("loot.extraLootEnabled", true);
+
+    public static final ModConfigSpec SPEC = BUILDER.build();
 
     @Override
     public float getNaturalRegenSpeedMultiplier() {
@@ -421,4 +430,5 @@ public class NightServerConfig extends ServerConfig {
     public boolean isBlockBedRespawnBelowMinY() {
         return CAMPFIRE_BLOCK_BED_RESPAWN.get();
     }
+
 }

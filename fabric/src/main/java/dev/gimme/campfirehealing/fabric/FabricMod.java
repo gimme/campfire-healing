@@ -1,17 +1,22 @@
 package dev.gimme.campfirehealing.fabric;
 
+import dev.gimme.campfirehealing.domain.Constants;
 import dev.gimme.campfirehealing.Main;
 import dev.gimme.campfirehealing.domain.loot.ModLootConfig;
+import dev.gimme.campfirehealing.infrastructure.FcapServerConfig;
+import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
-import net.fabricmc.loader.api.FabricLoader;
+import net.neoforged.fml.config.ModConfig;
 
 public class FabricMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        var main = Main.init(FabricLoader.getInstance().getConfigDir());
+        ConfigRegistry.INSTANCE.register(Constants.MOD_ID, ModConfig.Type.COMMON, FcapServerConfig.SPEC, FcapServerConfig.FILE_NAME);
+
+        var main = Main.init();
 
         // Register server tick event
         ServerTickEvents.END_SERVER_TICK.register(tickServer -> main.getServerHandler().onServerTick(tickServer));
